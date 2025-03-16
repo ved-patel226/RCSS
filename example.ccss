@@ -1,13 +1,13 @@
+let variable: "#FFFFFF";
+let filter: "blur(10px)";
+let transition: "all 0.3s ease";
+
 h1 {
-    color: red;
-    filter: blur(10px);
-    transition: all 0.3s ease;
+    color: $variable;
+    filter: $filter;
+    transition: $transition;
 
     h2 {
         color: blue;
     }
-}
-
-h1 .h2 {
-    color: green;
 }
