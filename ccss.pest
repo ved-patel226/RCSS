@@ -1,0 +1,84 @@
+//
+// CSS
+//
+css = _{ SOI ~ rule* ~ EOI }
+
+//
+// RULES
+//
+rule              = _{ rule_comment | rule_normal }
+rule_comment      = { WHITE_SPACE* ~ comment ~ WHITE_SPACE* }
+rule_normal       = { r_base }
+
+//
+// COMMENTS
+//
+comment             = _{ comment_start_tag ~ comment_body ~ comment_end_tag }
+comment_body        = { (!comment_end_tag ~ ANY)* }
+comment_start_tag   = _{ "/*" ~ WHITE_SPACE* }
+comment_end_tag     = _{ WHITE_SPACE* ~ "*/" }
+
+//
+// SELECTORS
+//
+sel_id          = _{ prefix_id ~ sel_id_body }
+sel_id_body     = { ASCII_ALPHA ~ text_chars* }
+
+sel_class       = _{ prefix_class ~ sel_class_body }
+sel_class_body  = { ASCII_ALPHA ~ text_chars* }
+
+sel_type        = { ASCII_ALPHA ~ text_chars* }
+
+sel_uni         = _{ "*" }
+
+// A single selector element (e.g., "div", ".class", "#id")
+sel_element     = _{ sel_id | sel_class | sel_uni | sel_type }
+
+// A compound selector with no spaces (e.g., "div.class#id")
+sel_compound    = { sel_element+ }
+
+// The full selector with support for nesting through whitespace
+selector        = { WHITE_SPACE* ~ sel_compound ~ (WHITE_SPACE+ ~ sel_compound)* ~ WHITE_SPACE* }
+
+//
+// DECLARATION
+//
+del_property        = @{ ASCII_ALPHA ~ text_chars* }
+
+del_val_keyword     = @{ ASCII_ALPHA ~ text_chars* }
+del_val_color       = { prefix_id ~ (ASCII_ALPHA | ASCII_DIGIT){6} }
+
+del_val_length      = { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? ~ length_type }
+
+
+// Function calls (ex: blur(10px))
+function_call = { ASCII_ALPHA+ ~ "(" ~ (!")" ~ ANY)* ~ ")" }
+
+
+del_value           = _{ ((function_call | del_val_keyword | del_val_color | del_val_length) ~ WHITE_SPACE*)+ }
+
+declaration         = { WHITE_SPACE* ~ del_property ~ property_separater ~ WHITE_SPACE* ~ del_value ~ end_seperater ~ WHITE_SPACE* }
+
+//
+// RULE BASE
+//
+
+// Ex: h1 { color: red }
+r_base = _{ selector ~ left_curly_brace ~ (r_base | declaration | comment)* ~ right_curly_brace ~ WHITE_SPACE* }
+
+//
+// SYMBOLS / CHARACTERS
+//
+text_chars          = _{ ASCII_ALPHA | ASCII_DIGIT | "_" | "-" }
+
+left_curly_brace    = _{ "{" }
+right_curly_brace   = _{ "}" }
+
+// multiples_separater = _{ "," }
+property_separater  = _{ ":" }
+end_seperater       = _{ ";" }
+
+prefix_id           = _{ "#" }
+prefix_class        = _{ "." }
+
+length_type         = { "cm" | "mm" | "in" | "px" | "pt" | "pc" | "em" | "ex" | "ch" | "rem" | "vw" | "vh" | "vmin" | "vmax" | "%" | "s" | "ms" }
