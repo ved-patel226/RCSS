@@ -72,8 +72,9 @@ declaration         = { WHITE_SPACE* ~ del_property ~ property_separater ~ WHITE
 //
 
 // Ex: h1 { color: red }
-r_base = _{ selector ~ left_curly_brace ~ (r_base | declaration | comment)* ~ right_curly_brace ~ WHITE_SPACE* }
 
+rule_content = _{ r_base | declaration | comment }
+r_base = _{ selector ~ left_curly_brace ~ rule_content* ~ right_curly_brace ~ WHITE_SPACE* }
 //
 // SYMBOLS / CHARACTERS
 //
