@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
+colored = "3.0.0"
 notify = "8.0.0"
 pest = "2.7.15"
 pest_derive = "2.7.15"
