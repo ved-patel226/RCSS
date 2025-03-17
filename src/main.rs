@@ -14,8 +14,10 @@ use std::collections::HashMap;
 use std::path::Path;
 use clap::{ Arg, Command };
 use colored::*;
+use regex::Regex;
 
 use ccss::compiler::{ process_rule, process_variable };
+use std::path::{ Component, PathBuf };
 
 #[derive(Parser)]
 #[grammar = "ccss.pest"]
@@ -256,6 +258,30 @@ fn compile(
         css_output = css_output.replace(&("$".to_string() + &name), &value);
     }
 
+    let regex = Regex::new(r"\$([a-zA-Z][a-zA-Z0-9_\-]*)").unwrap();
+    let mut undeclared_vars = Vec::new();
+
+    for capture in regex.captures_iter(&css_output) {
+        if let Some(var_name) = capture.get(1) {
+            undeclared_vars.push(var_name.as_str().to_string());
+        }
+    }
+
+    // Report any undeclared variables as warnings
+    if !undeclared_vars.is_empty() {
+        let header = " WARNING ".black().on_yellow().bold();
+        println!("\n{} {}\n", header, "UNDECLARED VARIABLES".yellow().bold());
+
+        for var_name in &undeclared_vars {
+            println!("{}  {} ${}", "⚠".yellow().bold(), "Undeclared variable:".yellow(), var_name);
+        }
+        println!(
+            "{}  {}\n",
+            "→".yellow().bold(),
+            "These variables will remain as-is in the output CSS".white()
+        );
+    }
+
     fs::File
         ::create(&output_path)
         .and_then(|mut file| file.write_all(css_output.as_bytes()))
@@ -269,7 +295,29 @@ fn compile(
             Box::new(e) as Box<dyn std::error::Error>
         })?;
 
-    println!("{} {}", "✓".green().bold(), format!("CSS written to {}", output_path).green());
+    {
+        let simplified_path = {
+            let mut pb = PathBuf::new();
+            for component in Path::new(output_path).components() {
+                match component {
+                    Component::ParentDir => {
+                        pb.pop();
+                    }
+                    Component::CurDir => {
+                        continue;
+                    }
+                    _ => pb.push(component.as_os_str()),
+                }
+            }
+            pb
+        };
+
+        println!(
+            "{} {}",
+            "✓".green().bold(),
+            format!("CSS written to {}", simplified_path.display()).green()
+        );
+    }
 
     Ok(())
 }
