@@ -1,6 +1,7 @@
 mod rcss {
     pub mod compiler;
     pub mod errors;
+    pub mod format;
 }
 
 use notify::event::{ AccessKind, AccessMode };
@@ -18,8 +19,11 @@ use regex::Regex;
 use std::path::{ Component, PathBuf };
 use colored::*;
 
-use rcss::compiler::{ process_rule, process_variable };
-use rcss::errors::{ RCSSError, display_error };
+use rcss::{
+    compiler::{ process_rule, process_variable },
+    errors::{ RCSSError, display_error },
+    format::format_rcss,
+};
 
 #[derive(Parser)]
 #[grammar = "rcss.pest"]
@@ -71,24 +75,26 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
             Ok(path) => {
                 // if file is written to
                 if let EventKind::Access(AccessKind::Close(AccessMode::Write)) = path.kind {
-                    let filename_stem = path.paths[0]
-                        .file_stem()
-                        .and_then(|stem| stem.to_str())
-                        .unwrap_or("default");
+                    if path.paths[0].extension().and_then(|s| s.to_str()) == Some("rcss") {
+                        let filename_stem = path.paths[0]
+                            .file_stem()
+                            .and_then(|stem| stem.to_str())
+                            .unwrap_or("default");
 
-                    // If you need this path relative to the original file's directory:
-                    let relative_css_path = path.paths[0]
-                        .parent()
-                        .unwrap_or(Path::new("."))
-                        .join("../css")
-                        .join(filename_stem);
+                        // If you need this path relative to the original file's directory:
+                        let relative_css_path = path.paths[0]
+                            .parent()
+                            .unwrap_or(Path::new("."))
+                            .join("../css")
+                            .join(filename_stem);
 
-                    let _ = compile(
-                        &path.paths[0].display().to_string(),
-                        &(relative_css_path.to_str().unwrap().to_string() + ".css"),
-                        verbose,
-                        human_readable
-                    );
+                        let _ = compile(
+                            &path.paths[0].display().to_string(),
+                            &(relative_css_path.to_str().unwrap().to_string() + ".css"),
+                            verbose,
+                            human_readable
+                        );
+                    }
                 }
             }
 
@@ -120,9 +126,11 @@ fn compile(
         println!("{} {} {} {}", input_path, output_path, verbose, human_readable);
     }
 
-    // Parse the CCSS content
     let pairs = match RCSSParser::parse(Rule::css, &unparsed_css) {
-        Ok(p) => p,
+        Ok(p) => {
+            format_rcss(&unparsed_css)?;
+            p
+        }
         Err(e) => {
             // Extract location information from pest error
             let (line, column) = match e.line_col {

@@ -27,7 +27,7 @@ sel_id_body     = { ASCII_ALPHA ~ text_chars* }
 sel_class       = _{ prefix_class ~ sel_class_body }
 sel_class_body  = { ASCII_ALPHA ~ text_chars* }
 
-sel_type        = { ASCII_ALPHA ~ text_chars* }
+sel_type        = _{ ASCII_ALPHA ~ text_chars* }
 
 sel_uni         = _{ "*" }
 
@@ -35,7 +35,7 @@ sel_uni         = _{ "*" }
 sel_element     = _{ sel_id | sel_class | sel_uni | sel_type }
 
 // A compound selector with no spaces (e.g., "div.class#id")
-sel_compound    = { sel_element+ }
+sel_compound    = _{ sel_element+ }
 
 // The full selector with support for nesting through whitespace
 selector        = { WHITE_SPACE* ~ sel_compound ~ (WHITE_SPACE+ ~ sel_compound)* ~ WHITE_SPACE* }
@@ -57,6 +57,17 @@ variable_declaration = { WHITE_SPACE* ~ "let" ~ WHITE_SPACE+ ~ variable_name ~ p
 string_literal      = { "\"" ~ ( !"\"" ~ ANY )* ~ "\"" }
 variable_name       = @{ ASCII_ALPHA ~ text_chars* }
 variable_reference  = { "$" ~ ASCII_ALPHA ~ text_chars* }
+
+// //
+// // USER CREATED FUNCTIONS
+// //
+// function_definition = _{ "fn" ~ WHITE_SPACE+ ~ function_name ~ WHITE_SPACE* ~ parameter_list ~ WHITE_SPACE* ~ function_block }
+// function_name       = @{ ASCII_ALPHA ~ text_chars* }
+// parameter_list      = { "(" ~ (parameter ~ ("," ~ parameter)*)? ~ ")" }
+// parameter           = { WHITE_SPACE* ~ identifier ~ WHITE_SPACE* }
+// identifier          = @{ ASCII_ALPHA ~ text_chars* }
+// function_block      = { left_curly_brace ~ declaration* ~ right_curly_brace }
+
 
 
 // Function calls (ex: blur(10px))

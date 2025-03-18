@@ -41,6 +41,7 @@ pub fn process_rule(rule_pair: pest::iterators::Pair<Rule>, human_readable: bool
         match pair.as_rule() {
             Rule::selector => {
                 let trimmed_selector = pair.as_str().trim();
+
                 if previous_selector.is_empty() {
                     result.push_str(&format!("{}{}{{{}", trimmed_selector, space, newline));
                 } else {
@@ -64,7 +65,9 @@ pub fn process_rule(rule_pair: pest::iterators::Pair<Rule>, human_readable: bool
                 );
             }
 
-            _ => {}
+            _ => {
+                println!("Rule: {:?}, Content: {}", pair.as_rule(), pair.as_str().trim());
+            }
         }
     }
 
