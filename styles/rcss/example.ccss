@@ -6,7 +6,6 @@ h1 {
     color: $variable;
     filter: $filter;
     transition: $transition;
-    
 
     h2 {
         color: blue;

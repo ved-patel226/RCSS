@@ -1,7 +1,7 @@
 use colored::*;
 
 #[allow(dead_code)]
-pub enum CCSSError {
+pub enum RCSSError {
     ParseError {
         line: usize,
         column: usize,
@@ -19,9 +19,9 @@ pub enum CCSSError {
     Generic(String),
 }
 
-pub fn display_error(error: &CCSSError) {
+pub fn display_error(error: &RCSSError) {
     match error {
-        CCSSError::ParseError { line, column, message, snippet } => {
+        RCSSError::ParseError { line, column, message, snippet } => {
             let header = " ERROR ".black().on_red().bold();
             let location = format!("{}: {}:{}", "SYNTAX ERROR".red().bold(), line, column);
 
@@ -55,21 +55,21 @@ pub fn display_error(error: &CCSSError) {
             println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
-        CCSSError::FileError { path, message } => {
+        RCSSError::FileError { path, message } => {
             let header = " ERROR ".black().on_red().bold();
             println!("\n{} {}\n", header, "FILE ERROR".red().bold());
             println!("{}  {} {}", "→".red().bold(), "Path:".yellow(), path);
             println!("{}  {}\n", "→".red().bold(), message.white().bold());
         }
 
-        CCSSError::VariableError { name, message } => {
+        RCSSError::VariableError { name, message } => {
             let header = " ERROR ".black().on_red().bold();
             println!("\n{} {}\n", header, "VARIABLE ERROR".red().bold());
             println!("{}  {} ${}", "→".red().bold(), "Variable:".yellow(), name);
             println!("{}  {}\n", "→".red().bold(), message.white().bold());
         }
 
-        CCSSError::Generic(message) => {
+        RCSSError::Generic(message) => {
             let header = " ERROR ".black().on_red().bold();
             println!("\n{} {}\n", header, message.red().bold());
         }

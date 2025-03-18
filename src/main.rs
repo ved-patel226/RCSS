@@ -1,4 +1,4 @@
-mod ccss {
+mod rcss {
     pub mod compiler;
     pub mod errors;
 }
@@ -18,18 +18,18 @@ use regex::Regex;
 use std::path::{ Component, PathBuf };
 use colored::*;
 
-use ccss::compiler::{ process_rule, process_variable };
-use ccss::errors::{ CCSSError, display_error };
+use rcss::compiler::{ process_rule, process_variable };
+use rcss::errors::{ RCSSError, display_error };
 
 #[derive(Parser)]
-#[grammar = "ccss.pest"]
-pub struct CCSSParser;
+#[grammar = "rcss.pest"]
+pub struct RCSSParser;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     // Define and parse command line arguments
-    let matches = Command::new("CCSS Compiler")
+    let matches = Command::new("RCSS Compiler")
         .version("1.0.0")
-        .about("Compiles CCSS files to CSS")
+        .about("Compiles RCCS files to CSS")
         .arg(Arg::new("input").help("Input directory to process").required(true).index(1))
         .arg(
             Arg::new("minify")
@@ -53,7 +53,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let verbose = matches.get_flag("verbose");
     let human_readable = !matches.get_flag("minify");
 
-    // Read the CCSS file
     if verbose {
         println!("Reading from {}", input_path);
     }
@@ -64,7 +63,7 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 
     // Add a path to be watched. All files and directories at that path and
     // below will be monitored for changes.
-    watcher.watch(Path::new("styles/ccss"), RecursiveMode::Recursive)?;
+    watcher.watch(Path::new(input_path), RecursiveMode::Recursive)?;
     // Block forever, printing out events as they come in
 
     for res in rx {
@@ -109,7 +108,7 @@ fn compile(
 ) -> std::result::Result<(), Box<dyn std::error::Error>> {
     let unparsed_css = fs::read_to_string(input_path).map_err(|e| {
         display_error(
-            &(CCSSError::FileError {
+            &(RCSSError::FileError {
                 path: input_path.to_string(),
                 message: format!("Failed to read file: {}", e),
             })
@@ -122,7 +121,7 @@ fn compile(
     }
 
     // Parse the CCSS content
-    let pairs = match CCSSParser::parse(Rule::css, &unparsed_css) {
+    let pairs = match RCSSParser::parse(Rule::css, &unparsed_css) {
         Ok(p) => p,
         Err(e) => {
             // Extract location information from pest error
@@ -138,7 +137,7 @@ fn compile(
             let context = lines[start..end].join("\n");
 
             display_error(
-                &(CCSSError::ParseError {
+                &(RCSSError::ParseError {
                     line,
                     column,
                     message: format!("{}", e),
@@ -214,7 +213,7 @@ fn compile(
         .and_then(|mut file| file.write_all(css_output.as_bytes()))
         .map_err(|e| {
             display_error(
-                &(CCSSError::FileError {
+                &(RCSSError::FileError {
                     path: output_path.to_string(),
                     message: format!("Failed to write file: {}", e),
                 })
