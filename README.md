@@ -1,8 +1,8 @@
-# Rusty Cascading Style Sheets (RCSS)
-
 <p align="center">
   <img src="./assets/logo/128.png" alt="RCSS Logo" width="150">
 </p>
+
+# Rusty Cascading Style Sheets (RCSS)
 
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
