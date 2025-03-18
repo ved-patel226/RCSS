@@ -2,7 +2,16 @@
   <img src="./assets/logo/128.png" alt="RCSS Logo" width="150">
 </p>
 
-# Rusty Cascading Style Sheets (RCSS)
+# 
+<div id="toc">
+  <ul style="list-style: none">
+    <summary>
+      <h1>
+      Rusty Cascading Style Sheets (RCSS)
+      </h1>
+    </summary>
+  </ul>
+</div>
 
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
@@ -22,7 +31,13 @@
 
 ---
 
-## Roadmap
+<div id="toc">
+  <ul style="list-style: none">
+    <summary>
+      <h2> Roadmap </h2>
+    </summary>
+  </ul>
+</div>
 
 ### ✅ Phase 1: Core Features (Current)
 - Implement Rust-like syntax parsing.
