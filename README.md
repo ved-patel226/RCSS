@@ -1,8 +1,14 @@
-<p align="center">
-  <img src="./assets/logo/128.png" alt="RCSS Logo" width="150">
-</p>
+<div id="toc">
+  <ul style="list-style: none">
+    <summary>
+      <p align="center">
+        <img src="./assets/logo/128.png" alt="RCSS Logo" width="150">
+      </p>
+    </summary>
+  </ul>
+</div>
 
-# 
+
 <div id="toc">
   <ul style="list-style: none">
     <summary>
