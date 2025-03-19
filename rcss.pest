@@ -1,14 +1,20 @@
 //
 // CSS
 //
-css = _{ SOI ~ variable_declaration* ~ rule* ~ EOI }
+css = _{ SOI ~ function_definition* ~ variable_declaration* ~ rule* ~ EOI }
 
 //
 // RULES
 //
-rule              = _{ rule_comment | rule_normal }
+rule              = _{ rule_comment | media_query | rule_normal }
 rule_comment      = { WHITE_SPACE* ~ comment ~ WHITE_SPACE* }
 rule_normal       = { r_base }
+
+//
+// MEDIA QUERIES
+//
+media_query       = { WHITE_SPACE* ~ "@media" ~ WHITE_SPACE+ ~ media_condition ~ WHITE_SPACE* ~ left_curly_brace ~ rule* ~ right_curly_brace ~ WHITE_SPACE* }
+media_condition   = { (!(left_curly_brace) ~ ANY)+ }
 
 //
 // COMMENTS
@@ -61,12 +67,12 @@ variable_reference  = { "$" ~ ASCII_ALPHA ~ text_chars* }
 // //
 // // USER CREATED FUNCTIONS
 // //
-// function_definition = _{ "fn" ~ WHITE_SPACE+ ~ function_name ~ WHITE_SPACE* ~ parameter_list ~ WHITE_SPACE* ~ function_block }
-// function_name       = @{ ASCII_ALPHA ~ text_chars* }
-// parameter_list      = { "(" ~ (parameter ~ ("," ~ parameter)*)? ~ ")" }
-// parameter           = { WHITE_SPACE* ~ identifier ~ WHITE_SPACE* }
-// identifier          = @{ ASCII_ALPHA ~ text_chars* }
-// function_block      = { left_curly_brace ~ declaration* ~ right_curly_brace }
+function_definition = _{ "fn" ~ WHITE_SPACE+ ~ function_name ~ WHITE_SPACE* ~ parameter_list ~ WHITE_SPACE* ~ function_block }
+function_name       = @{ ASCII_ALPHA ~ text_chars* }
+parameter_list      = { "(" ~ (parameter ~ ("," ~ parameter)*)? ~ ")" }
+parameter           = { WHITE_SPACE* ~ identifier ~ WHITE_SPACE* }
+identifier          = @{ ASCII_ALPHA ~ text_chars* }
+function_block      = { left_curly_brace ~ declaration* ~ right_curly_brace }
 
 
 

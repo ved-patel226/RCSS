@@ -1,7 +1,6 @@
 mod rcss {
     pub mod compiler;
     pub mod errors;
-    pub mod format;
 }
 
 use notify::event::{ AccessKind, AccessMode };
@@ -20,9 +19,8 @@ use std::path::{ Component, PathBuf };
 use colored::*;
 
 use rcss::{
-    compiler::{ process_rule, process_variable },
+    compiler::{ process_rule, process_variable, process_media_query },
     errors::{ RCSSError, display_error },
-    format::format_rcss,
 };
 
 #[derive(Parser)]
@@ -127,10 +125,7 @@ fn compile(
     }
 
     let pairs = match RCSSParser::parse(Rule::css, &unparsed_css) {
-        Ok(p) => {
-            format_rcss(&unparsed_css)?;
-            p
-        }
+        Ok(p) => p,
         Err(e) => {
             // Extract location information from pest error
             let (line, column) = match e.line_col {
@@ -176,6 +171,14 @@ fn compile(
             Rule::rule_normal => {
                 let rule_css = process_rule(pair, human_readable);
                 css_output.push_str(&rule_css);
+            }
+
+            Rule::media_query => {
+                let media_css = process_media_query(pair, human_readable);
+                css_output.push_str(&media_css);
+                if verbose {
+                    println!("{} {}", "Media query:".green(), "processed");
+                }
             }
 
             Rule::EOI => {}

@@ -1,20 +1,31 @@
 let variable: "#FFFFFF";
-let filter: "blur(10px)";
-let transition: "all 0.3s ease";
+let breakpoint: "768px";
 
 h1 {
     color: $variable;
-    filter: $filter;
-    transition: $transition;
-
-
-
+    
     h2 {
         color: blue;
     }
 }
 
-
 h4 {
     color: green;
+}
+
+
+/* MOBILE STYLES */
+
+@media screen and (max-width: $breakpoint) {
+    h1 {
+        color: red;
+        
+        h2 {
+            color: green;
+        }
+    }
+    
+    h4 {
+        font-size: 14px;
+    }
 }
