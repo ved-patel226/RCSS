@@ -21,6 +21,28 @@
 
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
+```rcss
+let variable: "#FFFFFF";
+let filter: "blur(10px)";
+let transition: "all 0.3s ease";
+
+
+h1 {
+    color: $variable;
+    filter: $filter;
+    transition: $transition;
+
+    h2 {
+        color: blue;
+    }
+}
+
+
+h4 {
+    color: green;
+}
+```
+
 ---
 <div id="toc">
   <ul style="list-style: none">
@@ -31,9 +53,10 @@
 </div>
 
 
-- **Rust-Inspired Syntax:** Write styles with a familiar, simple, and easy-to-remember syntax.
+- **Rust-Inspired Syntax:** Write styles with a familiar syntax.
 - **Nesting:** Organize CSS rules hierarchically.
-- **Variables:** Easily manage design variables and color schemes.
+- **Variables:** Easily manage variables and color schemes.
+- **Compiles to Human-Readable or Minified CSS:** Choose between readable CSS or a optimized, minified output.
 
 ---
 
@@ -62,3 +85,7 @@
 - WASM support.
 
 ---
+
+**Base logo** by [Dzuk](https://github.com/dzuk-mutant), licensed under [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/). [Download the emoji set](https://rustacean.net/fan-art.html#fanart)
+
+**RCSS** is licensed under the [MIT License](https://opensource.org/licenses/MIT).
