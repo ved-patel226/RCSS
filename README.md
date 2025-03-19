@@ -25,8 +25,12 @@
 let variable: "#FFFFFF";
 let breakpoint: "768px";
 
+fn padding() {
+  padding: 20px;
+}
+
 h1 {
-    color: $variable;
+    color: &variable;
     
     h2 {
         color: blue;
@@ -40,7 +44,7 @@ h4 {
 
 /* MOBILE STYLES */
 
-@media screen and (max-width: $breakpoint) {
+@media screen and (max-width: &breakpoint) {
     h1 {
         color: red;
         

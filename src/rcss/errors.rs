@@ -16,6 +16,10 @@ pub enum RCSSError {
         name: String,
         message: String,
     },
+    FunctionError {
+        name: String,
+        message: String,
+    },
     Generic(String),
 }
 
@@ -65,7 +69,13 @@ pub fn display_error(error: &RCSSError) {
         RCSSError::VariableError { name, message } => {
             let header = " ERROR ".black().on_red().bold();
             println!("\n{} {}\n", header, "VARIABLE ERROR".red().bold());
-            println!("{}  {} ${}", "→".red().bold(), "Variable:".yellow(), name);
+            println!("{}  {} {}\n", "→".red().bold(), message.white().bold(), name);
+        }
+
+        RCSSError::FunctionError { name, message } => {
+            let header = " ERROR ".black().on_red().bold();
+            println!("\n{} {}\n", header, "FUNCTION ERROR".red().bold());
+            println!("{}  {} {}", "→".red().bold(), "Function:".yellow(), name);
             println!("{}  {}\n", "→".red().bold(), message.white().bold());
         }
 

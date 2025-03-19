@@ -19,7 +19,7 @@ use std::path::{ Component, PathBuf };
 use colored::*;
 
 use rcss::{
-    compiler::{ process_rule, process_variable, process_media_query },
+    compiler::{ process_rule, process_variable, process_media_query, process_function_definition },
     errors::{ RCSSError, display_error },
 };
 
@@ -103,7 +103,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-// Update the compile function to use the new error system
 fn compile(
     input_path: &str,
     output_path: &str,
@@ -119,10 +118,6 @@ fn compile(
         );
         e
     })?;
-
-    if verbose {
-        println!("{} {} {} {}", input_path, output_path, verbose, human_readable);
-    }
 
     let pairs = match RCSSParser::parse(Rule::css, &unparsed_css) {
         Ok(p) => p,
@@ -154,6 +149,7 @@ fn compile(
 
     let mut css_output = String::new();
     let mut variables = HashMap::new();
+    let mut functions = HashMap::new();
 
     for pair in pairs {
         match pair.as_rule() {
@@ -162,40 +158,47 @@ fn compile(
 
                 if let Some((name, value)) = var {
                     if verbose {
-                        println!("{} {} = {}", "Variable:".green(), name, value);
+                        println!("{} {} = \"{}\"", "Variable:".blue().bold(), name, value);
                     }
                     variables.insert(name, value);
                 }
             }
 
+            Rule::function_definition => {
+                if let Some(function) = process_function_definition(pair) {
+                    if verbose {
+                        println!("{} {}()", "Definition:".blue().bold(), function.name);
+                    }
+                    functions.insert(function.name.clone(), function);
+                }
+            }
+
             Rule::rule_normal => {
-                let rule_css = process_rule(pair, human_readable);
+                let rule_css = process_rule(pair, human_readable, &functions);
                 css_output.push_str(&rule_css);
             }
 
             Rule::media_query => {
-                let media_css = process_media_query(pair, human_readable);
+                let media_css = process_media_query(pair, human_readable, &functions);
                 css_output.push_str(&media_css);
-                if verbose {
-                    println!("{} {}", "Media query:".green(), "processed");
-                }
             }
 
             Rule::EOI => {}
+            Rule::rule_comment => {}
 
             _ => {
                 if verbose {
-                    println!("{} {:?}", "Unhandled rule:".yellow(), pair.as_rule());
+                    println!("{} {:?}", "Unhandled rule:".yellow().bold(), pair.as_rule());
                 }
             }
         }
     }
 
     for (name, value) in variables {
-        css_output = css_output.replace(&("$".to_string() + &name), &value);
+        css_output = css_output.replace(&("&".to_string() + &name), &value);
     }
 
-    let regex = Regex::new(r"\$([a-zA-Z][a-zA-Z0-9_\-]*)").unwrap();
+    let regex = Regex::new(r"\&([a-zA-Z][a-zA-Z0-9_\-]*)").unwrap();
     let mut undeclared_vars = Vec::new();
 
     for capture in regex.captures_iter(&css_output) {
@@ -206,17 +209,14 @@ fn compile(
 
     // Report any undeclared variables as warnings
     if !undeclared_vars.is_empty() {
-        let header = " WARNING ".black().on_yellow().bold();
-        println!("\n{} {}\n", header, "UNDECLARED VARIABLES".yellow().bold());
-
-        for var_name in &undeclared_vars {
-            println!("{}  {} ${}", "⚠".yellow().bold(), "Undeclared variable:".yellow(), var_name);
+        for var in undeclared_vars {
+            display_error(
+                &(RCSSError::VariableError {
+                    name: var.clone(),
+                    message: format!("Undeclared variable:"),
+                })
+            );
         }
-        println!(
-            "{}  {}\n",
-            "→".yellow().bold(),
-            "These variables will remain as-is in the output CSS".white()
-        );
     }
 
     fs::File
