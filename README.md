@@ -53,6 +53,8 @@
 ### 🚧 Phase 2: Enhancements (Upcoming)
 - Add functions for reusable styles.
 - Implement importing
+- Add RCSS formatter
+- Improve output css format
 - Improve error handling and debugging tools.
 
 ### 🔮 Phase 3: Future Plans
