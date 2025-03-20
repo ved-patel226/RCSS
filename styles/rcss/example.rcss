@@ -10,3 +10,27 @@ fn highlight() {
     background-color: yellow;
     font-weight: bold;
 }
+
+h1 {
+    color: red;
+    font-size: 24px;
+
+    h2 {
+        color: blue;
+        font-size: 20px;
+
+        h3 {
+            color: green;
+            font-size: 16px;
+
+            defaultPadding();
+            defaultBorder();
+            highlight();
+        }
+
+        defaultPadding();
+    }
+
+    defaultPadding();
+    defaultBorder();
+}

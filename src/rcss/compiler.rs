@@ -2,6 +2,7 @@ use crate::Rule;
 use std::collections::HashMap;
 use colored::*;
 
+#[allow(dead_code)]
 #[derive(Clone)]
 pub struct Function {
     pub name: String,
@@ -178,21 +179,7 @@ pub fn process_rule(
             Rule::selector => {
                 let trimmed_selector = pair.clone().as_str().trim();
 
-                // if previous_selector.is_empty() {
-                //     result.push_str(&format!("{}{}{{{}", trimmed_selector, space, newline));
-                // } else {
-                //     result.push_str(
-                //         &format!(
-                //             "}}{}{} {}{}{{{}",
-                //             space,
-                //             previous_selector.trim(),
-                //             trimmed_selector,
-                //             space,
-                //             newline
-                //         )
-                //     );
-                // }
-
+                // push selector ex: (h1, h2, h3, div)
                 previous_selector.push_str(trimmed_selector);
                 previous_selector.push_str(space);
             }
@@ -220,6 +207,7 @@ pub fn process_rule(
             }
 
             Rule::right_curly_brace => {
+                // clear last selector
                 if let Some(last_space_index) = previous_selector.trim_end().rfind(' ') {
                     previous_selector.truncate(last_space_index);
                 } else {

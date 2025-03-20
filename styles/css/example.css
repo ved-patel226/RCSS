@@ -1,8 +1,21 @@
 h1 {
     color: red;
-    padding: 20px;
+    font-size: 24px;
+    padding: 10px;
+    border: 2px solid black;
+}
+
+h1 h2 h3 {
+    color: green;
+    font-size: 16px;
+    padding: 10px;
+    border: 2px solid black;
+    background-color: yellow;
+    font-weight: bold;
 }
 
 h1 h2 {
     color: blue;
+    font-size: 20px;
+    padding: 10px;
 }

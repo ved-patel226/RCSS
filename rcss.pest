@@ -1,7 +1,7 @@
 //
 // CSS
 //
-css = _{ SOI ~ (function_definition | variable_declaration | rule)* ~ EOI }
+css = _{ SOI ~ (WHITE_SPACE* ~ (function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
 
 //
 // RULES
