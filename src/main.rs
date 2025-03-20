@@ -17,6 +17,7 @@ use clap::{ Arg, Command };
 use regex::Regex;
 use std::path::{ Component, PathBuf };
 use colored::*;
+use chrono::Local;
 
 use rcss::{
     compiler::{ process_rule, process_variable, process_media_query, process_function_definition },
@@ -249,10 +250,13 @@ fn compile(
             pb
         };
 
+        let now = Local::now();
+        let formatted_time = now.format("%I:%M:%S %p");
+
         println!(
             "{} {}",
-            "✓".green().bold(),
-            format!("CSS written to {}", simplified_path.display()).green()
+            format!("CSS written to {}", simplified_path.display()).bright_cyan().bold(),
+            format!("@ {}", formatted_time).bright_yellow().bold()
         );
     }
 
