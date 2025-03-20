@@ -1,13 +1,12 @@
-fn padding() {
-    padding: 20px;
+fn defaultPadding() {
+    padding: 10px;
 }
 
-h1 {
-    padding();
+fn defaultBorder() {
+    border: 2px solid black;
+}
 
-    h2 {
-        color: blue;
-    }
-
-    color: red;
+fn highlight() {
+    background-color: yellow;
+    font-weight: bold;
 }

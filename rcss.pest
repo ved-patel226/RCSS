@@ -104,8 +104,8 @@ r_content = _{
 //
 text_chars          = _{ ASCII_ALPHA | ASCII_DIGIT | "_" | "-" }
 
-left_curly_brace    = _{ "{" }
-right_curly_brace   = _{ "}" }
+left_curly_brace    = { "{" }
+right_curly_brace   = { "}" }
 
 // multiples_separater = _{ "," }
 property_separater  = _{ ":" }
