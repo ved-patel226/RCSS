@@ -1,35 +1,13 @@
-let variable: "#FFFFFF";
-let breakpoint: "768px";
-
 fn padding() {
-  padding: 20px;
+    padding: 20px;
 }
 
 h1 {
-    color: &variable;
-    
+    padding();
+
     h2 {
-        color: blue;    
+        color: blue;
     }
-}
 
-h4 {
-    color: green;
-}
-
-
-/* MOBILE STYLES */
-
-@media screen and (max-width: &breakpoint) {
-    h1 {
-        color: red;
-        
-        h2 {
-            color: green;
-        }
-    }
-    
-    h4 {
-        font-size: 14px;
-    }
+    color: red;
 }

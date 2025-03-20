@@ -73,7 +73,7 @@ parameter_list      = { "(" ~ ")" }
 parameter           = { WHITE_SPACE* ~ identifier ~ WHITE_SPACE* }
 identifier          = @{ ASCII_ALPHA ~ text_chars* }
 function_block      = { left_curly_brace ~ declaration* ~ right_curly_brace }
-user_created_function_call = { WHITE_SPACE* ~ function_name ~ WHITE_SPACE* ~ "(" ~ ")" ~ WHITE_SPACE* ~ ";" }
+user_created_function_call = { WHITE_SPACE* ~ function_name ~ WHITE_SPACE* ~ parameter_list ~ WHITE_SPACE* ~ ";" }
 
 // Function calls (ex: blur(10px))
 function_call = { ASCII_ALPHA+ ~ "(" ~ (!")" ~ ANY)* ~ ")" }
@@ -90,8 +90,9 @@ declaration         = { WHITE_SPACE* ~ del_property ~ property_separater ~ WHITE
 // Ex: h1 { color: red }
 
 r_base = _{ selector ~ left_curly_brace ~ r_content* ~ right_curly_brace ~ WHITE_SPACE* }
-r_content = _{ nested_rule | declaration | comment | user_created_function_call }
+r_content = _{ user_created_function_call | declaration | nested_rule | comment  }
 nested_rule = _{ r_base }
+
 //
 // SYMBOLS / CHARACTERS
 //

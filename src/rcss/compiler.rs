@@ -197,11 +197,13 @@ pub fn process_rule(
                 previous_selector.push_str(trimmed_selector);
                 previous_selector.push_str(space);
             }
+
             Rule::declaration => {
                 result.push_str(
                     &format!("{}{}{}", space.repeat(indent_size), pair.as_str().trim(), newline)
                 );
             }
+
             Rule::user_created_function_call => {
                 if
                     let Some(function_content) = process_function_call(
