@@ -1,11 +1,10 @@
-h1 {
-    color: red;
-    font-size: 24px;
+.container-woah .container-yay {
+    color: blue;
+    font-size: 20px;
     padding: 10px;
-    border: 2px solid black;
 }
 
-h1 h2 h3 {
+.container-woah .container-yay .text-rust {
     color: green;
     font-size: 16px;
     padding: 10px;
@@ -14,8 +13,9 @@ h1 h2 h3 {
     font-weight: bold;
 }
 
-h1 h2 {
-    color: blue;
-    font-size: 20px;
+.container-woah {
+    color: red;
+    font-size: 24px;
     padding: 10px;
+    border: 2px solid black;
 }

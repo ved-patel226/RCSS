@@ -77,12 +77,15 @@ pub fn process_function_definition(function_pair: pest::iterators::Pair<Rule>) -
 pub fn process_function_call(
     call_pair: pest::iterators::Pair<Rule>,
     functions: &HashMap<String, Function>,
-    human_readable: bool
+    human_readable: bool,
+    verbose: bool
 ) -> Option<String> {
     let function_name = call_pair.as_str().trim_end_matches("();").trim();
 
     if let Some(function) = functions.get(function_name) {
-        println!("{} {}", "Called: ".blue().bold(), format!("{}()", function_name));
+        if verbose {
+            println!("{} {}", "Called: ".blue().bold(), format!("{}()", function_name));
+        }
 
         let mut result = String::new();
         let newline = if human_readable { "\n" } else { "" };
@@ -113,8 +116,9 @@ pub fn process_function_call(
 
 pub fn process_media_query(
     media_query_pair: pest::iterators::Pair<Rule>,
+    functions: &HashMap<String, Function>,
     human_readable: bool,
-    functions: &HashMap<String, Function>
+    verbose: bool
 ) -> String {
     let mut result = String::new();
     let newline = if human_readable { "\n" } else { "" };
@@ -129,11 +133,11 @@ pub fn process_media_query(
                 condition = pair.as_str().trim().to_string();
             }
             Rule::rule_normal => {
-                inner_rules.push(process_rule(pair, human_readable, functions));
+                inner_rules.push(process_rule(pair, functions, human_readable, verbose));
             }
             Rule::media_query => {
                 // Handle nested media queries if needed
-                inner_rules.push(process_media_query(pair, human_readable, functions));
+                inner_rules.push(process_media_query(pair, functions, verbose, human_readable));
             }
             Rule::rule_comment => {
                 // Handle comments if needed
@@ -166,8 +170,9 @@ pub fn process_media_query(
 
 pub fn process_rule(
     rule_pair: pest::iterators::Pair<Rule>,
+    functions: &HashMap<String, Function>,
     human_readable: bool,
-    functions: &HashMap<String, Function>
+    verbose: bool
 ) -> String {
     let inner_pairs = rule_pair.into_inner();
     let mut previous_selector = String::new();
@@ -196,7 +201,8 @@ pub fn process_rule(
                     let Some(function_content) = process_function_call(
                         pair.clone(),
                         functions,
-                        human_readable
+                        human_readable,
+                        verbose
                     )
                 {
                     let key = previous_selector.clone().trim().to_string();
@@ -213,17 +219,19 @@ pub fn process_rule(
                 } else {
                     previous_selector.clear();
                 }
-
-                println!("{}", previous_selector);
             }
 
             _ => {}
         }
 
-        println!("Rule: {:?}, Content: {}", pair.as_rule(), pair.as_str().trim());
+        if verbose {
+            println!("Rule: {:?}, Content: {}", pair.as_rule(), pair.as_str().trim());
+        }
     }
 
-    println!("{:?}", element_to_decleration);
+    if verbose {
+        println!("{:?}", element_to_decleration);
+    }
 
     generate_css(&element_to_decleration, human_readable)
 }

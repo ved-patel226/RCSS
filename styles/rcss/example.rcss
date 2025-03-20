@@ -11,15 +11,15 @@ fn highlight() {
     font-weight: bold;
 }
 
-h1 {
+.container-woah {
     color: red;
     font-size: 24px;
 
-    h2 {
+    .container-yay {
         color: blue;
         font-size: 20px;
 
-        h3 {
+        .text-rust {
             color: green;
             font-size: 16px;
 

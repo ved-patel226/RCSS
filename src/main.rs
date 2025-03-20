@@ -174,12 +174,12 @@ fn compile(
             }
 
             Rule::rule_normal => {
-                let rule_css = process_rule(pair, human_readable, &functions);
+                let rule_css = process_rule(pair, &functions, human_readable, verbose);
                 css_output.push_str(&rule_css);
             }
 
             Rule::media_query => {
-                let media_css = process_media_query(pair, human_readable, &functions);
+                let media_css = process_media_query(pair, &functions, verbose, human_readable);
                 css_output.push_str(&media_css);
             }
 
