@@ -6,7 +6,7 @@ css = _{ SOI ~ (WHITE_SPACE* ~ (function_definition | variable_declaration | rul
 //
 // RULES
 //
-rule              = _{ rule_comment | media_query | rule_normal }
+rule              = _{ rule_comment | media_query | keyframes_rule | rule_normal }
 rule_comment      = { WHITE_SPACE* ~ comment ~ WHITE_SPACE* }
 rule_normal       = { r_base }
 
@@ -15,6 +15,17 @@ rule_normal       = { r_base }
 //
 media_query       = { WHITE_SPACE* ~ "@media" ~ WHITE_SPACE+ ~ media_condition ~ WHITE_SPACE* ~ left_curly_brace ~ rule* ~ right_curly_brace ~ WHITE_SPACE* }
 media_condition   = { (!(left_curly_brace) ~ ANY)+ }
+
+//
+// KEYFRAMES
+//
+keyframes_rule    = { WHITE_SPACE* ~ "@keyframes" ~ WHITE_SPACE+ ~ keyframes_name ~ WHITE_SPACE* ~ left_curly_brace ~ keyframe_selector_block* ~ right_curly_brace ~ WHITE_SPACE* }
+keyframes_name    = @{ ASCII_ALPHA ~ text_chars* }
+keyframe_selector_block = { WHITE_SPACE* ~ keyframe_selector ~ WHITE_SPACE* ~ left_curly_brace ~ declaration* ~ right_curly_brace ~ WHITE_SPACE* }
+keyframe_selector = { percentage | from_keyword | to_keyword | (percentage ~ (WHITE_SPACE* ~ "," ~ WHITE_SPACE* ~ percentage)*) }
+percentage        = @{ ASCII_DIGIT+ ~ "%" }
+from_keyword      = { "from" }
+to_keyword        = { "to" }
 
 //
 // COMMENTS
@@ -104,7 +115,7 @@ r_content = _{
 //
 text_chars          = _{ ASCII_ALPHA | ASCII_DIGIT | "_" | "-" }
 
-left_curly_brace    = { "{" }
+left_curly_brace    = _{ "{" }
 right_curly_brace   = { "}" }
 
 // multiples_separater = _{ "," }
