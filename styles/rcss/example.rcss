@@ -7,7 +7,7 @@ fn padding() {
 
 h1 {
     border: 1px solid #ddd;
-    font-family: Arial, sans-serif;
+    font-family: "Arial, sans-serif";
     color: &variable;
 
     filter:blur(50px);
