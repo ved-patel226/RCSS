@@ -1,9 +1,9 @@
 use std::collections::HashMap;
-use crate::{ Rule, rcss::compiler::Function, process_rule };
+use crate::{ Rule, process_rule, MetaDataValue };
 
 pub fn process_media_query(
     media_query_pair: pest::iterators::Pair<Rule>,
-    functions: &HashMap<String, Function>,
+    meta_data: &HashMap<String, MetaDataValue>,
     human_readable: bool,
     verbose: bool
 ) -> String {
@@ -20,11 +20,11 @@ pub fn process_media_query(
                 condition = pair.as_str().trim().to_string();
             }
             Rule::rule_normal => {
-                inner_rules.push(process_rule(pair, functions, human_readable, verbose));
+                inner_rules.push(process_rule(pair, meta_data, human_readable, verbose));
             }
             Rule::media_query => {
                 // Handle nested media queries if needed
-                inner_rules.push(process_media_query(pair, functions, verbose, human_readable));
+                inner_rules.push(process_media_query(pair, meta_data, verbose, human_readable));
             }
             Rule::rule_comment => {
                 // Handle comments if needed

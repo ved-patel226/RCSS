@@ -9,9 +9,21 @@ pub struct Function {
     pub declarations: Vec<String>,
 }
 
+#[allow(dead_code)]
+#[derive(Clone)]
+pub struct Keyframes {
+    pub name: String,
+    pub frames: HashMap<String, Vec<String>>,
+}
+
+pub enum MetaDataValue {
+    Function(Function),
+    Keyframes(Keyframes),
+}
+
 pub fn process_rule(
     rule_pair: pest::iterators::Pair<Rule>,
-    functions: &HashMap<String, Function>,
+    meta_data: &HashMap<String, MetaDataValue>,
     human_readable: bool,
     verbose: bool
 ) -> String {
@@ -41,7 +53,7 @@ pub fn process_rule(
                 if
                     let Some(function_content) = process_function_call(
                         pair.clone(),
-                        functions,
+                        meta_data,
                         human_readable,
                         verbose
                     )

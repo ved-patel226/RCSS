@@ -33,7 +33,7 @@ use rcss::{
         media_query::process_media_query,
         variable::process_variable,
     },
-    compiler::process_rule,
+    compiler::{ process_rule, MetaDataValue },
 };
 
 #[derive(Parser)]
@@ -161,7 +161,8 @@ fn compile(
 
     let mut css_output = String::new();
     let mut variables = HashMap::new();
-    let mut functions = HashMap::new();
+
+    let mut meta_data: HashMap<String, HashMap<String, MetaDataValue>> = HashMap::new();
 
     for pair in pairs {
         match pair.as_rule() {
@@ -179,19 +180,41 @@ fn compile(
             Rule::function_definition => {
                 if let Some(function) = process_function_definition(pair) {
                     if verbose {
-                        println!("{} {}()", "Definition:".blue().bold(), function.name);
+                        if let MetaDataValue::Function(inner_function) = &function {
+                            println!("{} {}()", "Definition:".blue().bold(), inner_function.name);
+                        }
                     }
-                    functions.insert(function.name.clone(), function);
+                    meta_data
+                        .entry("functions".to_string())
+                        .or_insert_with(HashMap::new)
+                        .insert(
+                            if let MetaDataValue::Function(inner_function) = &function {
+                                inner_function.name.clone()
+                            } else {
+                                String::from("unknown")
+                            },
+                            function
+                        );
                 }
             }
 
             Rule::rule_normal => {
-                let rule_css = process_rule(pair, &functions, human_readable, verbose);
+                let rule_css = process_rule(
+                    pair,
+                    meta_data.entry("functions".to_string()).or_insert_with(HashMap::new),
+                    human_readable,
+                    verbose
+                );
                 css_output.push_str(&rule_css);
             }
 
             Rule::media_query => {
-                let media_css = process_media_query(pair, &functions, human_readable, verbose);
+                let media_css = process_media_query(
+                    pair,
+                    meta_data.entry("functions".to_string()).or_insert_with(HashMap::new),
+                    human_readable,
+                    verbose
+                );
                 css_output.push_str(&media_css);
             }
 

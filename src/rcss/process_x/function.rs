@@ -1,8 +1,10 @@
 use std::collections::HashMap;
-use crate::{ rcss::compiler::Function, Rule };
+use crate::{ rcss::compiler::Function, MetaDataValue, Rule };
 use colored::*;
 
-pub fn process_function_definition(function_pair: pest::iterators::Pair<Rule>) -> Option<Function> {
+pub fn process_function_definition(
+    function_pair: pest::iterators::Pair<Rule>
+) -> Option<MetaDataValue> {
     let mut name = String::new();
     let mut declarations = Vec::new();
 
@@ -22,30 +24,35 @@ pub fn process_function_definition(function_pair: pest::iterators::Pair<Rule>) -
                     }
                 }
             }
-            _ => {}
+            _ => {
+                // Handle all other cases
+            }
+        }
+
+        if !name.is_empty() {
+            return Some(
+                MetaDataValue::Function(Function {
+                    name,
+                    parameters: vec![],
+                    declarations,
+                })
+            );
+        } else {
+            return None;
         }
     }
-
-    if !name.is_empty() {
-        Some(Function {
-            name,
-            parameters: vec![],
-            declarations,
-        })
-    } else {
-        None
-    }
+    None
 }
 
 pub fn process_function_call(
     call_pair: pest::iterators::Pair<Rule>,
-    functions: &HashMap<String, Function>,
+    meta_data: &HashMap<String, MetaDataValue>,
     human_readable: bool,
     verbose: bool
 ) -> Option<String> {
     let function_name = call_pair.as_str().trim_end_matches("();").trim();
 
-    if let Some(function) = functions.get(function_name) {
+    if let Some(MetaDataValue::Function(function)) = meta_data.get(function_name) {
         if verbose {
             println!("{} {}", "Called: ".blue().bold(), format!("{}()", function_name));
         }
