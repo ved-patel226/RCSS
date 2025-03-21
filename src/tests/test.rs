@@ -1,22 +1,34 @@
+#[allow(unused_imports)]
 use crate::{ rcss, RCSSParser, Rule };
+#[allow(unused_imports)]
+use notify::{ recommended_watcher, Event, RecursiveMode, Watcher };
 
-use notify::event::{ AccessKind, AccessMode };
-use notify::{ recommended_watcher, Event, RecursiveMode, Result, Watcher, EventKind };
-use std::sync::mpsc;
-
+#[allow(unused_imports)]
 use pest::Parser;
+#[allow(unused_imports)]
 use pest_derive::Parser;
+#[allow(unused_imports)]
 use std::fs;
+#[allow(unused_imports)]
 use std::io::Write;
+#[allow(unused_imports)]
 use std::collections::HashMap;
+#[allow(unused_imports)]
 use std::path::Path;
+#[allow(unused_imports)]
 use clap::{ Arg, Command };
+#[allow(unused_imports)]
 use regex::Regex;
+#[allow(unused_imports)]
 use std::path::{ Component, PathBuf };
+#[allow(unused_imports)]
 use colored::*;
+#[allow(unused_imports)]
 use chrono::Local;
+#[allow(unused_imports)]
 use std::time::Instant;
 
+#[allow(unused_imports)]
 use rcss::{
     errors::{ RCSSError, display_error },
     process_x::{

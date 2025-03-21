@@ -8,7 +8,15 @@ pub fn process_keyframes(
     human_readable: bool,
     verbose: bool
 ) {
+    let keyframes: HashMap<String, String> = HashMap::new();
+
     for inner_pair in rule_pair.into_inner() {
-        println!("{:?} - {}", inner_pair.as_rule(), inner_pair.as_str());
+        match inner_pair.as_rule() {
+            Rule::keyframes_name => {
+                keyframes.insert("name".to_string(), inner_pair.as_str().to_string());
+            }
+
+            _ => {}
+        }
     }
 }

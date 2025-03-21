@@ -1,16 +1,16 @@
-h1 {
+h1 h2 {
+    color: blue;
+}h1 {
     border: 1px solid #ddd;
     font-family: Arial, sans-serif;
     color: #FFFFFF;
-}h1 h2 {
-    color: blue;
 }h4 {
     color: green;
 }@media screen and (max-width: 768px){
-    h1 {
-        color: red;
-    }h1 h2 {
+    h1 h2 {
         color: green;
+    }h1 {
+        color: red;
     }
     h4 {
         font-size: 14px;
