@@ -233,36 +233,39 @@ pub fn process_rule(
         println!("{:?}", element_to_decleration);
     }
 
-    generate_css(&element_to_decleration, human_readable)
+    // sort by key
+    let mut sorted_elements: Vec<_> = element_to_decleration.iter().collect();
+    sorted_elements.sort_by_key(|&(key, _)| key);
+    let sorted_map: HashMap<_, _> = sorted_elements
+        .into_iter()
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect();
+
+    generate_css(&sorted_map, human_readable)
 }
 
 pub fn generate_css(elements: &HashMap<String, Vec<String>>, human_readable: bool) -> String {
     let mut result = String::new();
     let newline = if human_readable { "\n" } else { "" };
     let space = if human_readable { " " } else { "" };
+    let indent = if human_readable { "    " } else { "" };
 
     for (selector, declarations) in elements {
-        // Start CSS rule with selector
-        result.push_str(&format!("{}{}{{{}", selector, space, newline));
+        println!("- {}", &selector);
 
-        // Add declarations with proper indentation
+        result.push_str(&format!("{}{}{{{}", selector.trim(), space, newline));
+
         for declaration in declarations {
-            let indent = if human_readable { "    " } else { "" };
+            println!("  - {}", &declaration);
+
             let declaration_str = declaration.trim();
 
-            // Check if declaration ends with semicolon and add if needed
             let semicolon = if declaration_str.ends_with(';') { "" } else { ";" };
 
             result.push_str(&format!("{}{}{}{}", indent, declaration_str, semicolon, newline));
         }
 
-        // Close CSS rule
-        result.push_str(&format!("}}{}", newline));
-
-        // Add empty line between rules for better readability if human_readable
-        if human_readable {
-            result.push_str(newline);
-        }
+        result.push_str("}");
     }
 
     result.trim_end().to_string()

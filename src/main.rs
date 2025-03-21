@@ -30,7 +30,6 @@ use rcss::{
 pub struct RCSSParser;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
-    // Define and parse command line arguments
     let matches = Command::new("RCSS Compiler")
         .version("1.0.0")
         .about("Compiles RCCS files to CSS")
@@ -68,7 +67,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     // Add a path to be watched. All files and directories at that path and
     // below will be monitored for changes.
     watcher.watch(Path::new(input_path), RecursiveMode::Recursive)?;
-    // Block forever, printing out events as they come in
 
     for res in rx {
         match res {
@@ -81,7 +79,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                             .and_then(|stem| stem.to_str())
                             .unwrap_or("default");
 
-                        // If you need this path relative to the original file's directory:
                         let relative_css_path = path.paths[0]
                             .parent()
                             .unwrap_or(Path::new("."))
