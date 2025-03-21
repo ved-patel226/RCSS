@@ -87,17 +87,17 @@ h4 {
 ### ✅ Phase 1: Core Features (Current)
 - Implement Rust-like syntax parsing.
 - Support variables and nesting.
-- Build a compiler that transpiles RCSS to standard CSS.
+- Support functions with no arguments
 
 ### 🚧 Phase 2: Enhancements (Upcoming)
-- Add functions for reusable styles.
+- Support functions with arguments
 - Implement importing
 - Add RCSS formatter
 - Improve output css format
 - Improve error handling and debugging tools.
+- Develop a VS Code extension with syntax highlighting and code completion.
 
 ### 🔮 Phase 3: Future Plans
-- Develop a VS Code extension with syntax highlighting and code completion.
 - WASM support.
 
 ---
