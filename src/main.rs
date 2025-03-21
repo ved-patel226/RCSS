@@ -6,11 +6,13 @@ mod rcss {
         pub mod function;
         pub mod media_query;
         pub mod variable;
+        pub mod keyframes;
     }
 }
 
 use notify::event::{ AccessKind, AccessMode };
 use notify::{ recommended_watcher, Event, RecursiveMode, Result, Watcher, EventKind };
+use rcss::process_x::keyframes;
 use std::sync::mpsc;
 
 use pest::Parser;
@@ -32,6 +34,7 @@ use rcss::{
         function::{ process_function_definition, process_function_call },
         media_query::process_media_query,
         variable::process_variable,
+        keyframes::process_keyframes,
     },
     compiler::{ process_rule, MetaDataValue },
 };
@@ -184,41 +187,29 @@ fn compile(
                             println!("{} {}()", "Definition:".blue().bold(), inner_function.name);
                         }
                     }
-                    meta_data
-                        .entry("functions".to_string())
-                        .or_insert_with(HashMap::new)
-                        .insert(
-                            if let MetaDataValue::Function(inner_function) = &function {
-                                inner_function.name.clone()
-                            } else {
-                                String::from("unknown")
-                            },
-                            function
-                        );
+                    meta_data.entry("functions".to_string()).or_insert_with(HashMap::new);
                 }
             }
 
             Rule::rule_normal => {
-                let rule_css = process_rule(
-                    pair,
-                    meta_data.entry("functions".to_string()).or_insert_with(HashMap::new),
-                    human_readable,
-                    verbose
-                );
+                let rule_css = process_rule(pair, &meta_data, human_readable, verbose);
                 css_output.push_str(&rule_css);
             }
 
             Rule::media_query => {
-                let media_css = process_media_query(
-                    pair,
-                    meta_data.entry("functions".to_string()).or_insert_with(HashMap::new),
-                    human_readable,
-                    verbose
-                );
+                let media_css = process_media_query(pair, &meta_data, human_readable, verbose);
                 css_output.push_str(&media_css);
             }
 
-            Rule::keyframes_rule => {}
+            Rule::keyframes_rule => {
+                // let keyframes_css = process_media_query(pair, &meta_data, human_readable, verbose);
+                process_keyframes(
+                    pair,
+                    &meta_data.entry("keyframes".to_string()).or_insert_with(HashMap::new),
+                    human_readable,
+                    verbose
+                );
+            }
 
             Rule::EOI => {}
             Rule::rule_comment => {}

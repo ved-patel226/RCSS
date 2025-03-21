@@ -3,7 +3,7 @@ use crate::{ Rule, process_rule, MetaDataValue };
 
 pub fn process_media_query(
     media_query_pair: pest::iterators::Pair<Rule>,
-    meta_data: &HashMap<String, MetaDataValue>,
+    meta_data: &HashMap<String, HashMap<std::string::String, MetaDataValue>>,
     human_readable: bool,
     verbose: bool
 ) -> String {

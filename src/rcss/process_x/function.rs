@@ -46,13 +46,13 @@ pub fn process_function_definition(
 
 pub fn process_function_call(
     call_pair: pest::iterators::Pair<Rule>,
-    meta_data: &HashMap<String, MetaDataValue>,
+    functions: &HashMap<String, MetaDataValue>,
     human_readable: bool,
     verbose: bool
 ) -> Option<String> {
     let function_name = call_pair.as_str().trim_end_matches("();").trim();
 
-    if let Some(MetaDataValue::Function(function)) = meta_data.get(function_name) {
+    if let Some(MetaDataValue::Function(function)) = functions.get(function_name) {
         if verbose {
             println!("{} {}", "Called: ".blue().bold(), format!("{}()", function_name));
         }

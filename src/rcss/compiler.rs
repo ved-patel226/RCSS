@@ -23,7 +23,7 @@ pub enum MetaDataValue {
 
 pub fn process_rule(
     rule_pair: pest::iterators::Pair<Rule>,
-    meta_data: &HashMap<String, MetaDataValue>,
+    meta_data: &HashMap<String, HashMap<std::string::String, MetaDataValue>>,
     human_readable: bool,
     verbose: bool
 ) -> String {
@@ -31,6 +31,9 @@ pub fn process_rule(
     let mut previous_selector = String::new();
     let space = if human_readable { " " } else { "" };
     let mut element_to_decleration: HashMap<String, Vec<String>> = HashMap::new();
+
+    let binding = HashMap::new();
+    let functions = meta_data.get("functions").unwrap_or(&binding);
 
     for pair in inner_pairs {
         match pair.as_rule() {
@@ -53,7 +56,7 @@ pub fn process_rule(
                 if
                     let Some(function_content) = process_function_call(
                         pair.clone(),
-                        meta_data,
+                        functions,
                         human_readable,
                         verbose
                     )
