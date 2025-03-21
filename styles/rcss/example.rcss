@@ -9,6 +9,8 @@ h1 {
     border: 1px solid #ddd;
     font-family: Arial, sans-serif;
     color: &variable;
+
+    filter:blur(50px);
     
     h2 {
         color: blue;
@@ -38,7 +40,7 @@ h4 {
 
 @keyframes important1 {
   from {
-    margin-top: 50px;
+    filter: blur(50px);
   }
   50% {
     margin-top: 150px;
