@@ -5,10 +5,10 @@ h1 h2 {
 }h4 {
     color: green;
 }@media screen and (max-width: 768px){
-    h1 h2 {
-        color: green;
-    }h1 {
+    h1 {
         color: red;
+    }h1 h2 {
+        color: green;
     }
     h4 {
         font-size: 14px;
