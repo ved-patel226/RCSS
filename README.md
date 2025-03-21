@@ -20,7 +20,7 @@
 </div>
 
 <a align="center">
-   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+   <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
 </a>
 
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
