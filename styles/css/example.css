@@ -1,10 +1,11 @@
-h1 h2 {
-    color: blue;
-}h1 {
+h1 {
+    animation: important1;
     border: 1px solid #ddd;
     font-family: "Arial, sans-serif";
     color: #FFFFFF;
     filter:blur(50px);
+}h1 h2 {
+    color: blue;
 }h4 {
     color: green;
 }@media screen and (max-width: 768px){
@@ -16,4 +17,13 @@ h1 h2 {
     h4 {
         font-size: 14px;
     }
+}
+@keyframes important1 {
+	to {
+		filter: blur(50px);
+		color: red;
+	}
+	from {
+		margin-top: 100px;
+	}
 }

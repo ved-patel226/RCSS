@@ -6,6 +6,7 @@ fn padding() {
 }
 
 h1 {
+    animation: 1s important1;
     border: 1px solid #ddd;
     font-family: "Arial, sans-serif";
     color: &variable;
@@ -39,13 +40,11 @@ h4 {
 }
 
 @keyframes important1 {
-  from {
-    filter: blur(50px);
-  }
-  50% {
-    margin-top: 150px;
-  }
   to {
+    filter: blur(50px);
+    color: red;
+  }
+  from {
     margin-top: 100px;
   }
 }
