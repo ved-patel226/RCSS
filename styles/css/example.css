@@ -1,21 +1,20 @@
-.container-woah .container-yay .text-rust {
-    color: green;
-    font-size: 16px;
-    padding: 10px;
-    border: 2px solid black;
-    background-color: yellow;
-    font-weight: bold;
+h1 {
+    color: #FFFFFF;
 }
 
-.container-woah {
-    color: red;
-    font-size: 24px;
-    padding: 10px;
-    border: 2px solid black;
-}
-
-.container-woah .container-yay {
+h1 h2 {
     color: blue;
-    font-size: 20px;
-    padding: 10px;
+}h4 {
+    color: green;
+}@media screen and (max-width: 768px){
+    h1 h2 {
+        color: green;
+    }
+    
+    h1 {
+        color: red;
+    }
+    h4 {
+        font-size: 14px;
+    }
 }

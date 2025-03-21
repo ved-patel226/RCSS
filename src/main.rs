@@ -18,6 +18,7 @@ use regex::Regex;
 use std::path::{ Component, PathBuf };
 use colored::*;
 use chrono::Local;
+use std::time::Instant;
 
 use rcss::{
     compiler::{ process_rule, process_variable, process_media_query, process_function_definition },
@@ -110,6 +111,8 @@ fn compile(
     verbose: bool,
     human_readable: bool
 ) -> std::result::Result<(), Box<dyn std::error::Error>> {
+    let start_time = Instant::now();
+
     let unparsed_css = fs::read_to_string(input_path).map_err(|e| {
         display_error(
             &(RCSSError::FileError {
@@ -180,7 +183,7 @@ fn compile(
             }
 
             Rule::media_query => {
-                let media_css = process_media_query(pair, &functions, verbose, human_readable);
+                let media_css = process_media_query(pair, &functions, human_readable, verbose);
                 css_output.push_str(&media_css);
             }
 
@@ -253,10 +256,13 @@ fn compile(
         let now = Local::now();
         let formatted_time = now.format("%I:%M:%S %p");
 
+        let elapsed_time = start_time.elapsed();
+
         println!(
-            "{} {}",
-            format!("CSS written to {}", simplified_path.display()).bright_cyan().bold(),
-            format!("@ {}", formatted_time).bright_yellow().bold()
+            "{} {} {}",
+            format!("CSS written to {}", simplified_path.display()).green(),
+            format!("in {:.2?}", elapsed_time).truecolor(128, 128, 128),
+            format!("@ {}", formatted_time).truecolor(128, 128, 128)
         );
     }
 

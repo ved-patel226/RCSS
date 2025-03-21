@@ -1,36 +1,35 @@
-fn defaultPadding() {
-    padding: 10px;
+let variable: "#FFFFFF";
+let breakpoint: "768px";
+
+fn padding() {
+  padding: 20px;
 }
 
-fn defaultBorder() {
-    border: 2px solid black;
-}
-
-fn highlight() {
-    background-color: yellow;
-    font-weight: bold;
-}
-
-.container-woah {
-    color: red;
-    font-size: 24px;
-
-    .container-yay {
+h1 {
+    color: &variable;
+    
+    h2 {
         color: blue;
-        font-size: 20px;
-
-        .text-rust {
-            color: green;
-            font-size: 16px;
-
-            defaultPadding();
-            defaultBorder();
-            highlight();
-        }
-
-        defaultPadding();
     }
+}
 
-    defaultPadding();
-    defaultBorder();
+h4 {
+    color: green;
+}
+
+
+/* MOBILE STYLES */
+
+@media screen and (max-width: &breakpoint) {
+    h1 {
+        color: red;
+        
+        h2 {
+            color: green;
+        }
+    }
+    
+    h4 {
+        font-size: 14px;
+    }
 }
