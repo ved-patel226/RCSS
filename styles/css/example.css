@@ -1,7 +1,9 @@
-h1 h2 {
-    color: blue;
-}h1 {
+h1 {
+    border: 1px solid #ddd;
+    font-family: Arial, sans-serif;
     color: #FFFFFF;
+}h1 h2 {
+    color: blue;
 }h4 {
     color: green;
 }@media screen and (max-width: 768px){

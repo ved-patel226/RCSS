@@ -30,8 +30,8 @@ use rcss::{
 
 #[test]
 fn website_tests() -> std::result::Result<(), Box<dyn std::error::Error>> {
-    let input_path = "src/tests/rcss/test.ccss";
-    let output_path = "src/tests/css";
+    let input_path = "src/tests/test.rcss";
+    let output_path = "src/tests/output.css";
     let verbose = true;
     let human_readable = true;
 

@@ -63,7 +63,7 @@ selector        = { WHITE_SPACE* ~ sel_compound ~ (WHITE_SPACE+ ~ sel_compound)*
 del_property        = @{ ASCII_ALPHA ~ text_chars* }
 
 del_val_keyword     = @{ ASCII_ALPHA ~ text_chars* }
-del_val_color       = { prefix_id ~ (ASCII_ALPHA | ASCII_DIGIT){6} }
+del_val_color       = { prefix_id ~ (ASCII_ALPHA | ASCII_DIGIT)+ }
 
 del_val_length      = { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? ~ length_type }
 
@@ -89,9 +89,10 @@ user_created_function_call = { WHITE_SPACE* ~ function_name ~ WHITE_SPACE* ~ par
 // Function calls (ex: blur(10px))
 function_call = { ASCII_ALPHA+ ~ "(" ~ (!")" ~ ANY)* ~ ")" }
 
+bundled_value = { value_item ~ (WHITE_SPACE+ ~ value_item)* }
 
-del_value = _{ (function_call | del_val_keyword | del_val_color | del_val_length | variable_reference | string_literal) ~ WHITE_SPACE* }
-
+value_item = _{ del_val_keyword | del_val_length | del_val_color | function_call | variable_reference | string_literal }
+del_value = _{ WHITE_SPACE* ~ bundled_value ~ (WHITE_SPACE* ~ "," ~ WHITE_SPACE* ~ bundled_value)* ~ WHITE_SPACE* }
 
 declaration         = { WHITE_SPACE* ~ del_property ~ property_separater ~ WHITE_SPACE* ~ del_value ~ end_seperater ~ WHITE_SPACE* }
 
@@ -126,4 +127,4 @@ end_seperater       = _{ ";" }
 prefix_id           = _{ "#" }
 prefix_class        = _{ "." }
 
-length_type         = { "cm" | "mm" | "in" | "px" | "pt" | "pc" | "em" | "ex" | "ch" | "rem" | "vw" | "vh" | "vmin" | "vmax" | "%" | "s" | "ms" }
+length_type         = { "cm" | "mm" | "in" | "px" | "pt" | "pc" | "em" | "ex" | "ch" | "rem" | "vw" | "vh" | "vmin" | "vmax" | "%" | "s" | "ms" | "" }
