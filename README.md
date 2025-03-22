@@ -23,13 +23,10 @@
 <p align="center">
   <a aria-label="License" href="https://github.com/ved-patel226/rcss/blob/master/LICENSE"><img alt="" src="https://img.shields.io/npm/l/turbo.svg?style=for-the-badge&labelColor=000000&color="></a>
   <a aria-label="Join the community on GitHub" href="https://github.com/ved-patel226/rcss/discussions"><img alt="" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=turborepo&labelColor=000000&logoWidth=20&logoColor=white"></a>
+  <a aria-label="Vscode Extension" href="https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss"><img alt="" src="https://img.shields.io/visual-studio-marketplace/v/rcss-syntax-highlighting.rcss?style=for-the-badge"></a>
 </p>
 
-## Upgrade Your VSCode Experience!
-
-Enhance your development with our **VSCode extension** for **Syntax Highlighting**.
-
-[![VS Code Extension](https://img.shields.io/visual-studio-marketplace/v/rcss-syntax-highlighting.rcss?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss)
+Enhance your development with our **[VSCode extension for Syntax Highlighting](https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss)** to experience seamless editing and improved productivity.
 
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
