@@ -95,6 +95,7 @@ h4 {
 - Implement Rust-like syntax parsing.
 - Support variables and nesting.
 - Support functions with no arguments
+- Develop a VS Code extension with syntax highlighting.
 
 ### 🚧 Phase 2: Enhancements (Upcoming)
 - Support functions with arguments
@@ -102,7 +103,6 @@ h4 {
 - Add RCSS formatter
 - Improve output css format
 - Improve error handling and debugging tools.
-- Develop a VS Code extension with syntax highlighting and code completion.
 
 ### 🔮 Phase 3: Future Plans
 - WASM support.
