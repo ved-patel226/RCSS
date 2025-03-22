@@ -124,4 +124,4 @@ end_seperater       = _{ ";" }
 prefix_id           = _{ "#" }
 prefix_class        = _{ "." }
 
-length_type         = { "cm" | "mm" | "in" | "px" | "pt" | "pc" | "em" | "ex" | "ch" | "rem" | "vw" | "vh" | "vmin" | "vmax" | "%" | "s" | "ms" }
+length_type         = { "cm" | "mm" | "in" | "px" | "pt" | "pc" | "em" | "ex" | "ch" | "rem" | "vw" | "vh" | "vmin" | "vmax" | "%" | "s" | "ms" | "" }
