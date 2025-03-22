@@ -128,12 +128,14 @@ fn website_tests() -> std::result::Result<(), Box<dyn std::error::Error>> {
 
             Rule::keyframes_rule => {
                 // let keyframes_css = process_media_query(pair, &meta_data, human_readable, verbose);
-                process_keyframes(
+                let keyframes_css = process_keyframes(
                     pair,
                     &meta_data.entry("keyframes".to_string()).or_insert_with(HashMap::new),
                     human_readable,
                     verbose
-                );
+                )?;
+
+                css_output.push_str(&keyframes_css);
             }
 
             Rule::EOI => {}

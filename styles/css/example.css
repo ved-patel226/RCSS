@@ -1,9 +1,9 @@
 h1 {
-    animation: important1;
-    border: 1px solid #ddd;
+    animation: 1s important1;
+    border: 1px solid #FFFFFF;
     font-family: "Arial, sans-serif";
     color: #FFFFFF;
-    filter:blur(50px);
+    filter: blur(50px);
 }h1 h2 {
     color: blue;
 }h4 {
@@ -17,13 +17,12 @@ h1 {
     h4 {
         font-size: 14px;
     }
-}
-@keyframes important1 {
+}@keyframes important1 {
+	from {
+		margin-top: 100px;
+	}
 	to {
 		filter: blur(50px);
 		color: red;
-	}
-	from {
-		margin-top: 100px;
 	}
 }

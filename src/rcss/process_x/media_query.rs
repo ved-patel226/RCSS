@@ -50,7 +50,7 @@ pub fn process_media_query(
         }
     }
 
-    result.push_str(&format!("}}{}", newline));
+    result.push_str("}");
 
     result
 }
