@@ -8,7 +8,6 @@
   </ul>
 </div>
 
-
 <div id="toc">
   <ul style="list-style: none">
     <summary>
@@ -26,6 +25,12 @@
   <a aria-label="Join the community on GitHub" href="https://github.com/ved-patel226/rcss/discussions"><img alt="" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=turborepo&labelColor=000000&logoWidth=20&logoColor=white"></a>
 </p>
 
+## Upgrade Your VSCode Experience!
+
+Enhance your development with our **VSCode extension** for **Syntax Highlighting**.
+
+[![VS Code Extension](https://img.shields.io/visual-studio-marketplace/v/rcss-syntax-highlighting.rcss?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss)
+
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
 ```rcss
@@ -38,7 +43,7 @@ fn padding() {
 
 h1 {
     color: &variable;
-    
+
     h2 {
         color: blue;
     }
@@ -54,12 +59,12 @@ h4 {
 @media screen and (max-width: &breakpoint) {
     h1 {
         color: red;
-        
+
         h2 {
             color: green;
         }
     }
-    
+
     h4 {
         font-size: 14px;
     }
@@ -67,6 +72,7 @@ h4 {
 ```
 
 ---
+
 <div id="toc">
   <ul style="list-style: none">
     <summary>
@@ -74,7 +80,6 @@ h4 {
     </summary>
   </ul>
 </div>
-
 
 - **Rust-Inspired Syntax:** Write styles with a familiar syntax.
 - **Nesting:** Organize CSS rules hierarchically.
@@ -92,12 +97,14 @@ h4 {
 </div>
 
 ### ✅ Phase 1: Core Features (Current)
+
 - Implement Rust-like syntax parsing.
 - Support variables and nesting.
 - Support functions with no arguments
 - Develop a VS Code extension with syntax highlighting.
 
 ### 🚧 Phase 2: Enhancements (Upcoming)
+
 - Support functions with arguments
 - Implement importing
 - Add RCSS formatter
@@ -105,6 +112,7 @@ h4 {
 - Improve error handling and debugging tools.
 
 ### 🔮 Phase 3: Future Plans
+
 - WASM support.
 
 ---
