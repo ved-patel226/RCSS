@@ -26,7 +26,8 @@
   <a aria-label="Vscode Extension" href="https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss"><img alt="" src="https://img.shields.io/visual-studio-marketplace/v/rcss-syntax-highlighting.rcss?style=for-the-badge"></a>
 </p>
 
-Download the **[VSCode extension](https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss)** for syntax highlighting!
+> [!TIP]
+> Download the **[VSCode extension](https://marketplace.visualstudio.com/items?itemName=rcss-syntax-highlighting.rcss)** for syntax highlighting!
 
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
