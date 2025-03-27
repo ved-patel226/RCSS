@@ -91,6 +91,23 @@ h4 {
   </ul>
 </div>
 
+First, if you don't have Cargo (Rust's package manager) installed, you can install it by following the instructions on the [official Rust website](https://www.rust-lang.org/tools/install).
+
+Then, install:
+
+```bash
+cargo install rcss-css
+```
+
+> [!WARNING]
+> If you get an warning like:
+
+```bash
+warning: be sure to add `/home/vedpatel/.cargo/bin` to your PATH to be able to run the installed binaries
+```
+
+---
+
 <div id="toc">
   <ul style="list-style: none">
     <summary>

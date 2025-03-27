@@ -1,50 +1,8 @@
-let variable: "#FFFFFF";
-let breakpoint: "768px";
-
 fn padding() {
   padding: 20px;
 }
 
 h1 {
-    animation: 1s important1;
-    border: 1px solid &variable;
-    font-family: "Arial, sans-serif";
-    color: &variable;
-
-    filter: blur(50px);
-    
-    h2 {
-        color: blue;
-    }
-}
-
-h4 {  
-    color: green;
-}
-
-
-/* MOBILE STYLES */
-
-@media screen and (max-width: &breakpoint) {
-    h1 {
-        color: red;
-        
-        h2 {
-            color: green;
-        }
-    }
-    
-    h4 {
-        font-size: 14px;
-    }
-}
-
-@keyframes important1 {
-  to {
-    filter: blur(50px);
+    padding();
     color: red;
-  }
-  from {
-    margin-top: 100px;
-  }
 }
