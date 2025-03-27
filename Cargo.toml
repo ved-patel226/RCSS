@@ -1,5 +1,5 @@
 [package]
-name = "rcss"
+name = "rcss-css"
 description = "Rusty Cascading Style Sheets (RCSS) is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles."
 version = "0.1.0"
 edition = "2024"
