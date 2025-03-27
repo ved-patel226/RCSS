@@ -48,7 +48,7 @@ pub struct RCSSParser;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let matches = Command::new("RCSS")
-        .version("1.0.0")
+        .version("0.1.0")
         .about("Bringing Rust to CSS")
         .long_about(
             "For more information and to contribute, visit: https://github.com/ved-patel226/RCSS"

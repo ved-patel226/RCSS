@@ -86,6 +86,14 @@ h4 {
 <div id="toc">
   <ul style="list-style: none">
     <summary>
+      <h2> Installation </h2>
+    </summary>
+  </ul>
+</div>
+
+<div id="toc">
+  <ul style="list-style: none">
+    <summary>
       <h2> Roadmap </h2>
     </summary>
   </ul>
