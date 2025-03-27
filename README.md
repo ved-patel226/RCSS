@@ -127,6 +127,24 @@ cargo install rcss-css
 <div id="toc">
   <ul style="list-style: none">
     <summary>
+      <h2> Usage </h2>
+    </summary>
+  </ul>
+</div>
+
+RCSS expects a directory argument to watch. On file save, RCSS will compile automatically to `../css`
+
+```bash
+rcss-css styles/rcss
+```
+
+This command will compile `.rcss` files in `styles/rcss` into standard CSS files at `styles/css`.
+
+---
+
+<div id="toc">
+  <ul style="list-style: none">
+    <summary>
       <h2> Roadmap </h2>
     </summary>
   </ul>
