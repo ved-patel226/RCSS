@@ -39,8 +39,8 @@ fn padding() {
   padding: 20px;
 }
 
-h1 {
-    color: &variable;
+.container {
+    padding();
 
     h2 {
         color: blue;
@@ -48,6 +48,7 @@ h1 {
 }
 
 h4 {
+    width: 50%;
     color: green;
 }
 
@@ -55,17 +56,13 @@ h4 {
 /* MOBILE STYLES */
 
 @media screen and (max-width: &breakpoint) {
-    h1 {
-        color: red;
+  .container {
+      width: 100%;
+  }
 
-        h2 {
-            color: green;
-        }
-    }
-
-    h4 {
-        font-size: 14px;
-    }
+  h4 {
+      width: 100%;
+  }
 }
 ```
 

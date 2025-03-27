@@ -47,10 +47,13 @@ use rcss::{
 pub struct RCSSParser;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
-    let matches = Command::new("RCSS Compiler")
+    let matches = Command::new("RCSS")
         .version("1.0.0")
-        .about("Compiles RCCS files to CSS")
-        .arg(Arg::new("input").help("Input directory to process").required(true).index(1))
+        .about("Bringing Rust to CSS")
+        .long_about(
+            "For more information and to contribute, visit: https://github.com/ved-patel226/RCSS"
+        )
+        .arg(Arg::new("folder").help("Input directory to watch").required(true).index(1))
         .arg(
             Arg::new("minify")
                 .short('m')
@@ -68,7 +71,7 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         .get_matches();
 
     // Get input and output file paths
-    let input_path = matches.get_one::<String>("input").unwrap();
+    let input_path = matches.get_one::<String>("folder").unwrap();
 
     let verbose = matches.get_flag("verbose");
     let human_readable = !matches.get_flag("minify");

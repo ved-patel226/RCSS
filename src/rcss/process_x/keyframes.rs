@@ -56,8 +56,6 @@ pub fn process_keyframes(
         sorted_keys.sort_by_key(|key| key.trim_end_matches('%').parse::<u32>().unwrap_or(0));
     }
 
-    println!("{:?}", selectors);
-
     let mut result = String::new();
 
     result.push_str("@keyframes ");

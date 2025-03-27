@@ -79,14 +79,6 @@ pub fn process_rule(
 
             _ => {}
         }
-
-        if verbose {
-            println!("Rule: {:?}, Content: {}", pair.as_rule(), pair.as_str().trim());
-        }
-    }
-
-    if verbose {
-        println!("{:?}", element_to_decleration);
     }
 
     // sort by key
