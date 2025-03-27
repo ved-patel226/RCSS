@@ -16,6 +16,7 @@ pub struct Keyframes {
     pub frames: HashMap<String, Vec<String>>,
 }
 
+#[allow(dead_code)]
 pub enum MetaDataValue {
     Function(Function),
     Keyframes(Keyframes),
