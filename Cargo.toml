@@ -13,9 +13,9 @@ license-file = "LICENSE"
 keywords = [
     "css",
     "sass",
-    "css preprocessor",
-    "css alternative",
-    "web development",
+    "css-preprocessor",
+    "css-alternative",
+    "web-development",
 ]
 categories = ["web-programming", "command-line-utilities"]
 
