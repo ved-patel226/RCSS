@@ -115,9 +115,11 @@ cargo install rcss-css
 > 3. In the **System Properties** window, click the **Environment Variables** button.
 > 4. Under **System variables**, locate the `Path` variable and click **Edit**.
 > 5. Add the following path to the list:
+>
 >    ```
 >    C:\Users\<YourUsername>\.cargo\bin
 >    ```
+>
 > 6. Click **OK** to save your changes.
 >
 > Restart your terminal or command prompt to ensure the updated PATH is recognized.
