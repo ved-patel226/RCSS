@@ -55,13 +55,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         )
         .arg(Arg::new("folder").help("Input directory to watch").required(true).index(1))
         .arg(
-            Arg::new("minify")
-                .short('m')
-                .long("minify")
-                .help("Minify the output CSS")
-                .action(clap::ArgAction::SetTrue)
-        )
-        .arg(
             Arg::new("verbose")
                 .short('v')
                 .long("verbose")
@@ -74,11 +67,9 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let input_path = matches.get_one::<String>("folder").unwrap();
 
     let verbose = matches.get_flag("verbose");
-    let human_readable = !matches.get_flag("minify");
+    let human_readable = true;
 
-    if verbose {
-        println!("Reading from {}", input_path);
-    }
+    println!("Reading from {}", input_path);
 
     let (tx, rx) = mpsc::channel::<Result<Event>>();
 
