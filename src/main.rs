@@ -178,14 +178,18 @@ fn compile(
             }
 
             Rule::function_definition => {
-                if let Some(function) = process_function_definition(pair) {
-                    if verbose {
-                        if let MetaDataValue::Function(inner_function) = &function {
-                            println!("{} {}()", "Definition:".blue().bold(), inner_function.name);
-                        }
-                    }
-                    meta_data.entry("functions".to_string()).or_insert_with(HashMap::new);
+                let function_def = process_function_definition(pair).ok_or_else(||
+                    Box::<dyn std::error::Error>::from("Failed to process function definition")
+                )?;
+
+                if verbose {
+                    println!("{} {}()", "Function Definition:".blue().bold(), function_def.name);
                 }
+
+                meta_data
+                    .entry("functions".to_string())
+                    .or_insert_with(HashMap::new)
+                    .insert(function_def.name.clone(), MetaDataValue::Function(function_def));
             }
 
             Rule::rule_normal => {

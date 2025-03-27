@@ -1,8 +1,34 @@
+let variable: "#FFFFFF";
+let breakpoint: "768px";
+
 fn padding() {
   padding: 20px;
 }
 
-h1 {
+.container {
     padding();
-    color: red;
+
+    h2 {
+        color: blue;
+    }
 }
+
+h4 {
+    width: 50%;
+    color: green;
+}
+
+
+/* MOBILE STYLES */
+
+@media screen and (max-width: &breakpoint) {
+  .container {
+      width: 100%;
+  }
+
+  h4 {
+      width: 100%;
+  }
+}
+
+/* 572.40µs */

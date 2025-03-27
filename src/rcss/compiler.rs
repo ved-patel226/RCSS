@@ -2,7 +2,7 @@ use crate::{ Rule, process_function_call };
 use std::collections::HashMap;
 
 #[allow(dead_code)]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Function {
     pub name: String,
     pub parameters: Vec<String>,
@@ -10,12 +10,13 @@ pub struct Function {
 }
 
 #[allow(dead_code)]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Keyframes {
     pub name: String,
     pub frames: HashMap<String, Vec<String>>,
 }
 
+#[derive(Debug)]
 #[allow(dead_code)]
 pub enum MetaDataValue {
     Function(Function),

@@ -1,3 +1,15 @@
-h1 {
-    color: red;
+.container {
+    padding: 20px;
+}.container h2 {
+    color: blue;
+}h4 {
+    width: 50%;
+    color: green;
+}@media screen and (max-width: 768px){
+    .container {
+        width: 100%;
+    }
+    h4 {
+        width: 100%;
+    }
 }

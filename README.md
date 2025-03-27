@@ -66,6 +66,9 @@ h4 {
 }
 ```
 
+> [!NOTE]
+> The above RCSS code compiles to CSS in around **572.40µs** (power of rust)!
+
 ---
 
 <div id="toc">
@@ -100,11 +103,39 @@ cargo install rcss-css
 ```
 
 > [!WARNING]
-> If you get an warning like:
-
-```bash
-warning: be sure to add `/home/vedpatel/.cargo/bin` to your PATH to be able to run the installed binaries
-```
+> If you get a warning like:
+>
+> ```bash
+> warning: be sure to add `/home/<YourUsername>/.cargo/bin` to your PATH to be able to run the installed binaries
+> ```
+>
+> Heres how to fix it:
+> **For Linux Users**
+> Add the following line to your shell config file (e.g., `.bashrc`, `.zshrc`, etc.):
+>
+> ```bash
+> export PATH="$HOME/.cargo/bin:$PATH"
+> ```
+>
+> Then, reload your shell configuration:
+>
+> ```bash
+> source ~/.bashrc
+> ```
+>
+> **For Windows Users:**
+>
+> 1. Open the Start Menu and search for "Environment Variables."
+> 2. Click on "Edit the system environment variables."
+> 3. In the System Properties window, click on the "Environment Variables" button.
+> 4. Under "System variables," find the `Path` variable and click "Edit."
+> 5. Add the following path to the list:
+>    ```
+>    C:\Users\<YourUsername>\.cargo\bin
+>    ```
+> 6. Click "OK" to save your changes.
+>
+> After updating the PATH, restart your terminal or command prompt for the changes to take effect.
 
 ---
 

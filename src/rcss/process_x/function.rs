@@ -2,9 +2,7 @@ use std::collections::HashMap;
 use crate::{ rcss::compiler::Function, MetaDataValue, Rule };
 use colored::*;
 
-pub fn process_function_definition(
-    function_pair: pest::iterators::Pair<Rule>
-) -> Option<MetaDataValue> {
+pub fn process_function_definition(function_pair: pest::iterators::Pair<Rule>) -> Option<Function> {
     let mut name = String::new();
     let mut declarations = Vec::new();
 
@@ -24,24 +22,19 @@ pub fn process_function_definition(
                     }
                 }
             }
-            _ => {
-                // Handle all other cases
-            }
-        }
-
-        if !name.is_empty() {
-            return Some(
-                MetaDataValue::Function(Function {
-                    name,
-                    parameters: vec![],
-                    declarations,
-                })
-            );
-        } else {
-            return None;
+            _ => {}
         }
     }
-    None
+
+    if !name.is_empty() {
+        Some(Function {
+            name,
+            parameters: vec![],
+            declarations,
+        })
+    } else {
+        None
+    }
 }
 
 pub fn process_function_call(
