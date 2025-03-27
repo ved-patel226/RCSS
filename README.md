@@ -94,8 +94,6 @@ cargo install rcss-css
 > warning: be sure to add `/home/<YourUsername>/.cargo/bin` to your PATH to be able to run the installed binaries
 > ```
 >
-> Here's how to resolve it:
->
 > ### **For Linux Users**
 >
 > Add the following line to your shell configuration file (e.g., `.bashrc`, `.zshrc`, etc.):
