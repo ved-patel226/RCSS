@@ -8,15 +8,16 @@
   </ul>
 </div>
 
-<div id="toc">
-  <ul style="list-style: none">
-    <summary>
-      <h1>
-      Rusty Cascading Style Sheets (RCSS)
-      </h1>
-    </summary>
-  </ul>
+<div align="center">
+  <div id="toc">
+    <ul style="list-style: none">
+      <summary>
+        <h1>Rusty Cascading Style Sheets (RCSS)</h1>
+      </summary>
+    </ul>
+  </div>
 </div>
+
 
 ---
 
