@@ -88,6 +88,8 @@ Then, install:
 cargo install rcss-css
 ```
 
+
+
 > [!WARNING]
 > If you encounter the following warning:
 >
@@ -124,6 +126,8 @@ cargo install rcss-css
 > 6. Click **OK** to save your changes.
 >
 > Restart your terminal or command prompt to ensure the updated PATH is recognized.
+
+
 
 ---
 
