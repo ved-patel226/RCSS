@@ -277,7 +277,28 @@ fn compile(
     for pair in pairs {
         match pair.as_rule() {
             Rule::import_statement => {
-                process_import(&meta_data_to_file, &meta_data, canonical_input_dir, pair, verbose);
+                let res = process_import(
+                    &meta_data_to_file,
+                    &mut meta_data,
+                    canonical_input_dir,
+                    &pair,
+                    verbose
+                )
+                    .map_err(|_| {
+                        let pair_str = pair.as_str().to_string(); // Clone the string before the move
+                        RCSSError::ImportError {
+                            path: pair_str,
+                            message: "Couldn't find file".to_string(),
+                        }
+                    })
+                    .map_err(|e| {
+                        display_error(&e);
+                        e
+                    });
+
+                if let Ok(meta) = res {
+                    meta_data = meta.clone();
+                }
             }
 
             Rule::variable_declaration => {
@@ -343,9 +364,11 @@ fn compile(
         }
     }
 
-    for (name, value) in &meta_data["variables"] {
-        if let MetaDataValue::Variables(var) = value {
-            css_output = css_output.replace(&("&".to_string() + &name), &var.value);
+    if let Some(variables) = meta_data.get("variables") {
+        for (name, value) in variables {
+            if let MetaDataValue::Variables(var) = value {
+                css_output = css_output.replace(&("&".to_string() + &name), &var.value);
+            }
         }
     }
 

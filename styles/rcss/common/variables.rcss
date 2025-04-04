@@ -1,10 +1,6 @@
-let variable: "red";
+let breakpoint: "red";
 
 fn padding() {
   padding: 20px;
   color: red;
-}
-
-h1 {
-  color: blue;
 }

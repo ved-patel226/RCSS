@@ -1,11 +1,4 @@
-use common::variables::*;
-
-let variable: "#FFFFFF";
-let breakpoint: "768px";
-
-fn padding() {
-  padding: 20px;
-}
+use rcss::common::variables::*;
 
 .container {
     padding();
@@ -23,7 +16,7 @@ h4 {
 
 /* MOBILE STYLES */
 
-@media screen and (max-width: &breakpoint) {
+@media screen and (max-width: 758px) {
   .container {
       width: 100%;
   }

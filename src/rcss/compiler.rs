@@ -23,7 +23,7 @@ pub struct Variables {
     pub value: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[allow(dead_code)]
 pub enum MetaDataValue {
     Function(Function),
