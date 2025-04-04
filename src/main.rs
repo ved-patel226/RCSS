@@ -136,7 +136,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
             &canonical_input_dir,
             &meta_data_to_file,
             verbose,
-            human_readable
+            human_readable,
+            true
         );
 
         if let Ok(meta_data) = res {
@@ -198,7 +199,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                             &canonical_input_dir,
                             &meta_data_to_file,
                             verbose,
-                            human_readable
+                            human_readable,
+                            false
                         );
 
                         if let Ok(meta_data) = res {
@@ -224,7 +226,8 @@ fn compile(
     canonical_input_dir: &Path,
     meta_data_to_file: &HashMap<String, HashMap<String, HashMap<String, MetaDataValue>>>,
     verbose: bool,
-    human_readable: bool
+    human_readable: bool,
+    initial_compile: bool
 ) -> std::result::Result<
     HashMap<String, HashMap<String, MetaDataValue>>,
     Box<dyn std::error::Error>
@@ -277,6 +280,10 @@ fn compile(
     for pair in pairs {
         match pair.as_rule() {
             Rule::import_statement => {
+                if initial_compile {
+                    continue;
+                }
+
                 let res = process_import(
                     &meta_data_to_file,
                     &mut meta_data,

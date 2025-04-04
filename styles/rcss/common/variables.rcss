@@ -1,3 +1,5 @@
+use common::bother::other::*;
+
 let breakpoint: "red";
 
 fn padding() {

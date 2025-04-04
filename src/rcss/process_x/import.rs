@@ -1,4 +1,5 @@
 use crate::{ HashMap, MetaDataValue, Rule, Path };
+use colored::*;
 
 #[allow(dead_code)]
 pub fn process_import<'a>(
@@ -20,18 +21,32 @@ pub fn process_import<'a>(
                     .filter(|&s| s != "*")
                     .collect();
 
-                let mut path = canonical_input_dir.join(relative_path.join("/"));
+                // Skip the first element (root namespace) if it exists
+                let path_components = if !relative_path.is_empty() {
+                    &relative_path[1..]
+                } else {
+                    &relative_path[..]
+                };
+
+                let mut path = canonical_input_dir.join(path_components.join("/"));
+
                 if !path.to_string_lossy().ends_with(".rcss") {
                     path.set_extension("rcss");
                 }
-                println!("{:?}", path);
-                println!("{:?}", meta_data_to_file);
 
                 if
                     let Some(file_meta_data) = meta_data_to_file.get(
                         path.to_string_lossy().as_ref()
                     )
                 {
+                    if verbose {
+                        println!(
+                            "{} {:?}",
+                            "Path found at: ",
+                            path.to_string_lossy().blue().bold()
+                        );
+                    }
+
                     for (key, value) in file_meta_data {
                         meta_data
                             .entry(key.clone())
