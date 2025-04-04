@@ -7,6 +7,7 @@ mod rcss {
         pub mod media_query;
         pub mod variable;
         pub mod keyframes;
+        pub mod import;
     }
 }
 
@@ -35,6 +36,7 @@ use rcss::{
         media_query::process_media_query,
         variable::process_variable,
         keyframes::process_keyframes,
+        import::process_import,
     },
     compiler::{ process_rule, MetaDataValue, Variables },
 };
@@ -131,6 +133,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         let res = compile(
             &file_path.display().to_string(),
             &output_file_path.to_string_lossy(),
+            &canonical_input_dir,
+            &meta_data_to_file,
             verbose,
             human_readable
         );
@@ -191,6 +195,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                         let res = compile(
                             &path.paths[0].display().to_string(),
                             &output_file_path.to_string_lossy(),
+                            &canonical_input_dir,
+                            &meta_data_to_file,
                             verbose,
                             human_readable
                         );
@@ -201,8 +207,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                                 meta_data
                             );
                         }
-
-                        println!("{:?}", meta_data_to_file);
                     }
                 }
             }
@@ -217,6 +221,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 fn compile(
     input_path: &str,
     output_path: &str,
+    canonical_input_dir: &Path,
+    meta_data_to_file: &HashMap<String, HashMap<String, HashMap<String, MetaDataValue>>>,
     verbose: bool,
     human_readable: bool
 ) -> std::result::Result<
@@ -270,6 +276,10 @@ fn compile(
 
     for pair in pairs {
         match pair.as_rule() {
+            Rule::import_statement => {
+                process_import(&meta_data_to_file, &meta_data, canonical_input_dir, pair, verbose);
+            }
+
             Rule::variable_declaration => {
                 let var = process_variable(pair);
 
