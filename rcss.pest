@@ -1,7 +1,11 @@
+// Add this in the CSS section, near the beginning
+rcss = _{ SOI ~ (WHITE_SPACE* ~ (import_statement | function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
+
 //
-// CSS
+// IMPORTS
 //
-css = _{ SOI ~ (WHITE_SPACE* ~ (function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
+import_statement = { WHITE_SPACE* ~ "use" ~ WHITE_SPACE+ ~ import_path ~ end_seperater ~ WHITE_SPACE* }
+import_path = { (identifier ~ "::" )* ~ ( identifier | "*" ) }
 
 //
 // RULES

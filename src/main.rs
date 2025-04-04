@@ -10,10 +10,6 @@ mod rcss {
     }
 }
 
-mod tests {
-    pub mod test;
-}
-
 use notify::event::{ AccessKind, AccessMode };
 use notify::{ recommended_watcher, Event, RecursiveMode, Result, Watcher, EventKind };
 use std::sync::mpsc;
@@ -30,6 +26,7 @@ use std::path::{ Component, PathBuf };
 use colored::*;
 use chrono::Local;
 use std::time::Instant;
+use walkdir::WalkDir;
 
 use rcss::{
     errors::{ RCSSError, display_error },
@@ -39,7 +36,7 @@ use rcss::{
         variable::process_variable,
         keyframes::process_keyframes,
     },
-    compiler::{ process_rule, MetaDataValue },
+    compiler::{ process_rule, MetaDataValue, Variables },
 };
 
 #[derive(Parser)]
@@ -65,11 +62,87 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 
     // Get input and output file paths
     let input_path = matches.get_one::<String>("folder").unwrap();
+    let input_dir = Path::new(input_path);
+    // Create canonical input path for consistent comparison
+    let canonical_input_dir = input_dir.canonicalize()?;
+
+    // Create the base CSS output directory adjacent to the input directory
+    let css_output_dir = canonical_input_dir.parent().unwrap_or(&canonical_input_dir).join("css");
 
     let verbose = matches.get_flag("verbose");
     let human_readable = true;
 
     println!("Reading from {}", input_path);
+
+    // File Name -> Meta Data
+    let mut meta_data_to_file: HashMap<
+        String,
+        HashMap<String, HashMap<String, MetaDataValue>>
+    > = HashMap::new();
+
+    let mut rcss_files = Vec::new();
+
+    for entry in WalkDir::new(input_path)
+        .into_iter()
+        .filter_map(|e| e.ok()) {
+        if
+            entry
+                .path()
+                .extension()
+                .and_then(|s| s.to_str()) == Some("rcss")
+        {
+            rcss_files.push(entry.path().to_path_buf());
+        }
+    }
+
+    // Compile all detected RCSS files on startup
+    println!("Found {} RCSS files, compiling...", rcss_files.len());
+    for file_path in &rcss_files {
+        let canonical_file = file_path.canonicalize()?;
+
+        // Get the relative path from the input directory to this file
+        let relative_path = pathdiff
+            ::diff_paths(&canonical_file, &canonical_input_dir)
+            .unwrap_or_else(||
+                canonical_file
+                    .strip_prefix(&canonical_input_dir)
+                    .unwrap_or(Path::new(""))
+                    .to_path_buf()
+            );
+
+        let filename_stem = file_path
+            .file_stem()
+            .and_then(|stem| stem.to_str())
+            .unwrap_or("default");
+
+        // Create output directory with the same structure as input
+        let mut output_file_path = css_output_dir.clone();
+        if let Some(parent) = relative_path.parent() {
+            output_file_path.push(parent);
+        }
+
+        // Create directories if they don't exist
+        fs::create_dir_all(&output_file_path)?;
+
+        // Add filename to the path
+        output_file_path.push(filename_stem);
+        output_file_path.set_extension("css");
+
+        let res = compile(
+            &file_path.display().to_string(),
+            &output_file_path.to_string_lossy(),
+            verbose,
+            human_readable
+        );
+
+        if let Ok(meta_data) = res {
+            if let Ok(canonical_path) = file_path.canonicalize() {
+                meta_data_to_file.insert(canonical_path.display().to_string(), meta_data);
+            }
+        }
+    }
+
+    println!("Initial compilation complete. Watching for changes...");
 
     let (tx, rx) = mpsc::channel::<Result<Event>>();
 
@@ -90,18 +163,46 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                             .and_then(|stem| stem.to_str())
                             .unwrap_or("default");
 
-                        let relative_css_path = path.paths[0]
-                            .parent()
-                            .unwrap_or(Path::new("."))
-                            .join("../css")
-                            .join(filename_stem);
+                        let canonical_file = path.paths[0].canonicalize()?;
 
-                        let _ = compile(
+                        // Get the relative path from the input directory to this file
+                        let relative_path = pathdiff
+                            ::diff_paths(&canonical_file, &canonical_input_dir)
+                            .unwrap_or_else(||
+                                canonical_file
+                                    .strip_prefix(&canonical_input_dir)
+                                    .unwrap_or(Path::new(""))
+                                    .to_path_buf()
+                            );
+
+                        // Create output directory with the same structure as input
+                        let mut output_file_path = css_output_dir.clone();
+                        if let Some(parent) = relative_path.parent() {
+                            output_file_path.push(parent);
+                        }
+
+                        // Create directories if they don't exist
+                        fs::create_dir_all(&output_file_path)?;
+
+                        // Add filename to the path
+                        output_file_path.push(filename_stem);
+                        output_file_path.set_extension("css");
+
+                        let res = compile(
                             &path.paths[0].display().to_string(),
-                            &(relative_css_path.to_str().unwrap().to_string() + ".css"),
+                            &output_file_path.to_string_lossy(),
                             verbose,
                             human_readable
                         );
+
+                        if let Ok(meta_data) = res {
+                            meta_data_to_file.insert(
+                                canonical_file.display().to_string(),
+                                meta_data
+                            );
+                        }
+
+                        println!("{:?}", meta_data_to_file);
                     }
                 }
             }
@@ -118,7 +219,10 @@ fn compile(
     output_path: &str,
     verbose: bool,
     human_readable: bool
-) -> std::result::Result<(), Box<dyn std::error::Error>> {
+) -> std::result::Result<
+    HashMap<String, HashMap<String, MetaDataValue>>,
+    Box<dyn std::error::Error>
+> {
     let start_time = Instant::now();
 
     let unparsed_css = fs::read_to_string(input_path).map_err(|e| {
@@ -131,7 +235,7 @@ fn compile(
         e
     })?;
 
-    let pairs = match RCSSParser::parse(Rule::css, &unparsed_css) {
+    let pairs = match RCSSParser::parse(Rule::rcss, &unparsed_css) {
         Ok(p) => p,
         Err(e) => {
             // Extract location information from pest error
@@ -160,7 +264,7 @@ fn compile(
     };
 
     let mut css_output = String::new();
-    let mut variables = HashMap::new();
+    // let mut variables = HashMap::new();
 
     let mut meta_data: HashMap<String, HashMap<String, MetaDataValue>> = HashMap::new();
 
@@ -173,7 +277,11 @@ fn compile(
                     if verbose {
                         println!("{} {} = \"{}\"", "Variable:".blue().bold(), name, value);
                     }
-                    variables.insert(name, value);
+                    // variables.insert(name, value);
+                    meta_data
+                        .entry("variables".to_string())
+                        .or_insert_with(HashMap::new)
+                        .insert(name.clone(), MetaDataValue::Variables(Variables { name, value }));
                 }
             }
 
@@ -225,8 +333,10 @@ fn compile(
         }
     }
 
-    for (name, value) in variables {
-        css_output = css_output.replace(&("&".to_string() + &name), &value);
+    for (name, value) in &meta_data["variables"] {
+        if let MetaDataValue::Variables(var) = value {
+            css_output = css_output.replace(&("&".to_string() + &name), &var.value);
+        }
     }
 
     let regex = Regex::new(r"\&([a-zA-Z][a-zA-Z0-9_\-]*)").unwrap();
@@ -247,8 +357,15 @@ fn compile(
                     message: format!("Undeclared variable:"),
                 })
             );
+            return Err(
+                Box::new(
+                    std::io::Error::new(std::io::ErrorKind::Other, "Undeclared variable error")
+                )
+            );
         }
     }
+
+    println!("{}", output_path);
 
     fs::File
         ::create(&output_path)
@@ -293,5 +410,5 @@ fn compile(
         );
     }
 
-    Ok(())
+    Ok(meta_data)
 }

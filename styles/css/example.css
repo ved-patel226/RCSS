@@ -1,7 +1,7 @@
-.container h2 {
-    color: blue;
-}.container {
+.container {
     padding: 20px;
+}.container h2 {
+    color: red;
 }h4 {
     width: 50%;
     color: green;

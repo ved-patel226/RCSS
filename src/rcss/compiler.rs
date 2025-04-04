@@ -16,11 +16,19 @@ pub struct Keyframes {
     pub frames: HashMap<String, Vec<String>>,
 }
 
+#[allow(dead_code)]
+#[derive(Debug, Clone)]
+pub struct Variables {
+    pub name: String,
+    pub value: String,
+}
+
 #[derive(Debug)]
 #[allow(dead_code)]
 pub enum MetaDataValue {
     Function(Function),
     Keyframes(Keyframes),
+    Variables(Variables),
 }
 
 pub fn process_rule(

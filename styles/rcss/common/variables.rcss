@@ -1,0 +1,6 @@
+let variable: "red";
+
+fn padding() {
+  padding: 20px;
+  color: red;
+}
