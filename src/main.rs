@@ -365,8 +365,6 @@ fn compile(
         }
     }
 
-    println!("{}", output_path);
-
     fs::File
         ::create(&output_path)
         .and_then(|mut file| file.write_all(css_output.as_bytes()))

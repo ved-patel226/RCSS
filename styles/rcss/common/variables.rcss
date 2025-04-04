@@ -4,3 +4,7 @@ fn padding() {
   padding: 20px;
   color: red;
 }
+
+h1 {
+  color: blue;
+}
