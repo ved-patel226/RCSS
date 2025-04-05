@@ -16,7 +16,7 @@ h4 {
 
 /* MOBILE STYLES */
 
-@media screen and (max-width: 758px) {
+@media screen and (max-width: &breakpoint) {
   .container {
       width: 100%;
   }

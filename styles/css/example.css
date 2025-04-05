@@ -1,9 +1,12 @@
-.container h2 {
+.container {
+    padding: 20px;
+    color: red;
+}.container h2 {
     color: red;
 }h4 {
     width: 50%;
     color: green;
-}@media screen and (max-width: 758px){
+}@media screen and (max-width: red){
     .container {
         width: 100%;
     }
