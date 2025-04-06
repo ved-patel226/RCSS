@@ -2,6 +2,10 @@
 mod compile;
 mod error;
 
+mod process_x {
+    mod variables;
+}
+
 use error::Result;
 
 use clap::{ Arg, Command };
@@ -107,6 +111,11 @@ fn main() -> Result<()> {
             "Stopping execution due to initial compilation errors. Fix above before continuing.."
         );
         std::process::exit(1);
+    } else {
+        println!(
+            "Initial Compilation successful. Watching {} for changes...",
+            &rcss_input_path.display()
+        );
     }
 
     Ok(())

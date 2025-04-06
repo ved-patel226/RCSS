@@ -11,6 +11,10 @@ use crate::{ error::{ RCSSError, display_error }, Result };
 #[grammar = "rcss.pest"]
 pub struct RCSSParser;
 
+pub fn print_rule(pair: pest::iterators::Pair<Rule>) {
+    println!("{:?} -> {}", pair.as_rule(), pair.as_str());
+}
+
 #[allow(unused)]
 pub fn compile(
     input_path: &str,
@@ -51,6 +55,30 @@ pub fn compile(
             return Err(err);
         }
     };
+
+    let mut css_output = String::new();
+
+    for pair in pairs {
+        match pair.as_rule() {
+            Rule::import_statement => {
+                if initial_compile {
+                    continue;
+                }
+
+                print_rule(pair);
+            }
+
+            Rule::variable_declaration => {}
+
+            Rule::rule_comment => {}
+
+            Rule::EOI => {}
+
+            _ => {
+                println!("{:?} -> {}", pair.as_rule(), pair.as_str());
+            }
+        }
+    }
 
     Ok(project_meta_data.clone())
 }
