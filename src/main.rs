@@ -2,9 +2,12 @@
 mod compile;
 mod error;
 
-mod process_x {
-    mod variables;
+pub mod process_x {
+    pub mod variables;
+    pub mod rule_normal;
 }
+
+use process_x::{ variables, rule_normal };
 
 use error::Result;
 
@@ -15,7 +18,11 @@ use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 #[allow(unused)]
-enum MetaData {
+pub enum MetaData {
+    StyleMap {
+        selector: String,
+        declarations: Vec<String>,
+    },
     Variables {
         name: String,
         value: String,

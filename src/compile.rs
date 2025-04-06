@@ -7,6 +7,8 @@ use std::time::Instant;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
+use crate::{ rule_normal, variables };
+
 #[derive(Parser)]
 #[grammar = "rcss.pest"]
 pub struct RCSSParser;
@@ -57,10 +59,13 @@ pub fn compile(
     };
 
     let mut css_output = String::new();
+    let mut meta_data: Vec<MetaData> = Vec::new();
 
     for pair in pairs {
         match pair.as_rule() {
             Rule::import_statement => {
+                // we don't want to import anything on initial compile
+                // we just want to fill project_meta_data
                 if initial_compile {
                     continue;
                 }
@@ -68,17 +73,25 @@ pub fn compile(
                 print_rule(pair);
             }
 
-            Rule::variable_declaration => {}
+            Rule::variable_declaration => {
+                meta_data = variables::process_variable_declaration(meta_data, pair);
+            }
+
+            Rule::rule_normal => {
+                meta_data = rule_normal::process_rule_normal(meta_data, pair);
+            }
 
             Rule::rule_comment => {}
 
             Rule::EOI => {}
 
             _ => {
-                println!("{:?} -> {}", pair.as_rule(), pair.as_str());
+                // println!("{:?} -> {}", pair.as_rule(), pair.as_str());
             }
         }
     }
+
+    // println!("{:?}", meta_data);
 
     Ok(project_meta_data.clone())
 }

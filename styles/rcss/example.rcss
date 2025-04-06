@@ -1,29 +1,19 @@
 use rcss::common::variables::*;
 
+fn padding() {
+    padding: 10px;
+}
+
+let var: "5";
+
+
 .container {
+    color: blue;
+    filter: blur(10px);
+
     padding();
 
     h2 {
         color: red;
     }
 }
-
-h4 {
-    width: 50%;
-    color: green;
-}
-
-
-/* MOBILE STYLES */
-
-@media screen and (max-width: &breakpoint) {
-  .container {
-      width: 100%;
-  }
-
-  h4 {
-      width: 100%;
-  }
-}
-
-/* 572.40µs */
