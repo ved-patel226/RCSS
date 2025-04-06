@@ -2,7 +2,10 @@ use common::bother::other::*;
 
 let breakpoint: "red";
 
+fn color() {
+  color: red;
+}
+
 fn padding() {
   padding: 20px;
-  color: red;
 }

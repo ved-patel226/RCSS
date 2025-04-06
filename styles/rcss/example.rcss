@@ -1,8 +1,5 @@
 use rcss::common::variables::*;
 
-fn padding() {
-    padding: 10px;
-}
 
 let var: "5";
 

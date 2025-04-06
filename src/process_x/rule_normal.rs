@@ -48,7 +48,5 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
         }
     }
 
-    println!("{:?}", meta_data);
-
     meta_data
 }

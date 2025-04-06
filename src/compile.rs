@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
-use crate::{ rule_normal, variables };
+use crate::{ rule_normal, variables, functions };
 
 #[derive(Parser)]
 #[grammar = "rcss.pest"]
@@ -81,17 +81,21 @@ pub fn compile(
                 meta_data = rule_normal::process_rule_normal(meta_data, pair);
             }
 
+            Rule::function_definition => {
+                meta_data = functions::process_function_definition(meta_data, pair);
+            }
+
             Rule::rule_comment => {}
 
             Rule::EOI => {}
 
             _ => {
-                // println!("{:?} -> {}", pair.as_rule(), pair.as_str());
+                println!("{:?} -> {}", pair.as_rule(), pair.as_str());
             }
         }
     }
 
-    // println!("{:?}", meta_data);
+    println!("{:?}", meta_data);
 
     Ok(project_meta_data.clone())
 }

@@ -5,9 +5,10 @@ mod error;
 pub mod process_x {
     pub mod variables;
     pub mod rule_normal;
+    pub mod functions;
 }
 
-use process_x::{ variables, rule_normal };
+use process_x::{ variables, rule_normal, functions };
 
 use error::Result;
 
