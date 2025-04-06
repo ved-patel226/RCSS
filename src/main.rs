@@ -9,7 +9,8 @@ use compile::compile;
 use std::path::Path;
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
+#[allow(unused)]
 enum MetaData {
     Variables {
         name: String,
@@ -45,9 +46,6 @@ fn main() -> Result<()> {
     let css_input_path = rcss_input_path.join("../css").canonicalize()?;
 
     let verbose = matches.get_flag("verbose");
-
-    println!("RCSS Input Path: {:?}", rcss_input_path);
-    println!("CSS Input Path: {:?}", css_input_path);
 
     let mut project_meta_data: HashMap<String, Vec<MetaData>> = HashMap::new();
 
@@ -88,14 +86,27 @@ fn main() -> Result<()> {
 
     collect_rcss_files(&rcss_input_path, &mut rcss_files, &rcss_input_path)?;
 
+    let mut initial_compile_errors = 0;
+
     for rcss_file in &rcss_files {
-        compile(
-            rcss_input_path.join(rcss_file).to_str().unwrap(),
-            css_input_path.join(rcss_file).with_extension("css").to_str().unwrap(),
-            &project_meta_data,
-            verbose,
-            true // initial_compile
-        )?;
+        if
+            let Err(_) = compile(
+                rcss_input_path.join(rcss_file).to_str().unwrap(),
+                css_input_path.join(rcss_file).with_extension("css").to_str().unwrap(),
+                &project_meta_data,
+                verbose,
+                true // initial_compile
+            )
+        {
+            initial_compile_errors += 1;
+        }
+    }
+
+    if initial_compile_errors > 0 {
+        println!(
+            "Stopping execution due to initial compilation errors. Fix above before continuing.."
+        );
+        std::process::exit(1);
     }
 
     Ok(())

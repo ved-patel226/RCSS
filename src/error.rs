@@ -4,6 +4,7 @@ use colored::Colorize;
 
 /// The different types of errors that can occur in RCSS
 #[derive(Debug)]
+#[allow(unused)]
 pub enum RCSSError {
     IoError(std::io::Error),
     ParseError {
@@ -39,14 +40,15 @@ impl fmt::Display for RCSSError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             RCSSError::IoError(err) => write!(f, "IO Error: {}", err),
-            RCSSError::ParseError { file_path, line, column, message } => {
+            RCSSError::ParseError { file_path, line, column, message, context } => {
                 write!(
                     f,
-                    "Parse Error at {}:{}:{} - {}",
+                    "Parse Error at {}:{}:{} - {} (Context: {})",
                     file_path.display(),
                     line,
                     column,
-                    message
+                    message,
+                    context
                 )
             }
             RCSSError::CompilationError { file_path, message } => {
@@ -96,7 +98,7 @@ impl From<std::io::Error> for RCSSError {
 pub fn display_error(error: &RCSSError) {
     let error_title = match error {
         RCSSError::IoError(_) => "I/O ERROR",
-        RCSSError::ParseError { .. } => "PARSE ERROR",
+        RCSSError::ParseError { .. } => "SYNTAX ERROR",
         RCSSError::CompilationError { .. } => "COMPILATION ERROR",
         RCSSError::ConfigError(_) => "CONFIG ERROR",
         RCSSError::ImportError { .. } => "IMPORT ERROR",
@@ -106,11 +108,7 @@ pub fn display_error(error: &RCSSError) {
 
     // Create the header
     let header = format!(" {} ", error_title).black().on_red().bold();
-    let top_border = "═".repeat(error_title.len() + 2).red();
-
-    println!("\n╔{}╗", top_border);
-    println!("║{}║", header);
-    println!("╚{}╝\n", top_border);
+    println!("\n{}", header);
 
     // Display the error message
     match error {
@@ -119,17 +117,37 @@ pub fn display_error(error: &RCSSError) {
             println!("{}", err);
         }
 
-        RCSSError::ParseError { file_path, line, column, message } => {
-            println!("{}", " Location ".yellow().bold());
-            println!(
-                "  {} at line {} column {}",
-                file_path.display().to_string().blue(),
-                line,
-                column
-            );
+        RCSSError::ParseError { file_path, line, column, message, context } => {
+            let location = format!("{} --> {}:{}", file_path.display(), line, column);
 
-            println!("\n{}", " Message ".yellow().bold());
-            println!("  {}", message);
+            println!("{}\n", location);
+            let trimmed = message.split("expected").nth(1).unwrap_or(&message);
+            println!("{}  Expected: {}\n", "→".red().bold(), trimmed.white().bold());
+
+            // Display code snippet with highlighting
+            let lines: Vec<&str> = context.lines().collect();
+            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+            println!("{}", "│".bright_red());
+
+            for (i, line_content) in lines.iter().enumerate() {
+                let line_num = (line - 1 + i).to_string();
+                println!("{} {: >3} │ {}", "│".bright_red(), line_num.white(), line_content);
+
+                if i == 1 {
+                    // Highlight the error position with an arrow
+                    let mut pointer = " ".repeat(*column);
+                    pointer.push('↑');
+                    println!(
+                        "{} {: >3} │ {}",
+                        "│".bright_red(),
+                        " ".bright_yellow(),
+                        pointer.bright_red().bold()
+                    );
+                }
+            }
+
+            println!("{}", "│".bright_red());
+            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
         RCSSError::CompilationError { file_path, message } => {
@@ -179,17 +197,16 @@ pub fn display_error(error: &RCSSError) {
         }
     }
 
-    println!("\n{}\n", "For help, check the documentation or open an issue on GitHub.".dimmed());
+    println!("\n{}\n", "For help, open an issue on GitHub.".dimmed());
 }
 
 /// For displaying warnings that aren't critical errors
+#[allow(unused)]
 pub fn display_warning(message: &str) {
     let header = " WARNING ".black().on_yellow().bold();
     let top_border = "═".repeat(9).yellow();
 
-    println!("\n╔{}╗", top_border);
-    println!("║{}║", header);
-    println!("╚{}╝\n", top_border);
+    println!("{}", header);
 
     println!("  {}\n", message);
 }

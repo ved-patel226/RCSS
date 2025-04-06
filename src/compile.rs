@@ -11,13 +11,14 @@ use crate::{ error::{ RCSSError, display_error }, Result };
 #[grammar = "rcss.pest"]
 pub struct RCSSParser;
 
+#[allow(unused)]
 pub fn compile(
     input_path: &str,
     output_path: &str,
     project_meta_data: &HashMap<String, Vec<MetaData>>,
     verbose: bool,
     initial_compile: bool
-) -> Result<()> {
+) -> Result<HashMap<String, Vec<MetaData>>> {
     let start_time = Instant::now();
 
     let raw_rcss = fs::read_to_string(input_path)?;
@@ -51,5 +52,5 @@ pub fn compile(
         }
     };
 
-    Ok(())
+    Ok(project_meta_data.clone())
 }
