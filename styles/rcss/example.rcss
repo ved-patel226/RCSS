@@ -11,9 +11,13 @@ fn padding() {
     color: blue;
     filter: blur(10px);
 
-    padding();
 
     h2 {
         color: red;
+    padding();
+
     }
+
+    padding();
+
 }

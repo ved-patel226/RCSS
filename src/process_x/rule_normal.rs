@@ -43,10 +43,53 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
             }
 
             Rule::user_created_function_call => {
+                let user_created_func_inner_pairs = in_pair.clone().into_inner();
+                let mut func_name = String::new();
+                let mut func_declarations: Vec<String> = Vec::new();
+
+                for ucfunc_in_pair in user_created_func_inner_pairs {
+                    match ucfunc_in_pair.as_rule() {
+                        Rule::function_name => {
+                            func_name = ucfunc_in_pair.as_str().trim().to_string();
+                        }
+
+                        _ => {}
+                    }
+                }
+
+                if func_name.is_empty() {
+                    //TODO - Propagate Error
+                }
+
                 for data in &mut meta_data {
                     if let MetaData::Function { name, body } = data {
-                        println!("{} {:?}", name, body);
+                        if func_name == *name {
+                            func_declarations = body.clone();
+                        }
                     }
+                }
+
+                let joined_selector = current_selector.join(" ");
+
+                let key = joined_selector.trim();
+                let mut found_key = false;
+
+                for data in &mut meta_data {
+                    if let MetaData::StyleMap { selector, declarations } = data {
+                        if selector == key {
+                            found_key = true;
+                            declarations.extend(func_declarations.clone());
+                        }
+                    }
+                }
+
+                println!("{:?}", found_key);
+
+                if !found_key {
+                    meta_data.push(MetaData::StyleMap {
+                        selector: key.to_string(),
+                        declarations: func_declarations.clone(),
+                    });
                 }
             }
 
