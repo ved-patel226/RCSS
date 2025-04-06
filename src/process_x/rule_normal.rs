@@ -17,7 +17,7 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
                 }
             }
 
-            Rule::declaration | Rule::user_created_function_call => {
+            Rule::declaration => {
                 let mut found_key = false;
 
                 let joined_selector = current_selector.join(" ");
@@ -39,6 +39,14 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
                         selector: key.to_string(),
                         declarations: vec![value],
                     });
+                }
+            }
+
+            Rule::user_created_function_call => {
+                for data in &mut meta_data {
+                    if let MetaData::Function { name, body } = data {
+                        println!("{} {:?}", name, body);
+                    }
                 }
             }
 

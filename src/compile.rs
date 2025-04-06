@@ -77,12 +77,12 @@ pub fn compile(
                 meta_data = variables::process_variable_declaration(meta_data, pair);
             }
 
-            Rule::rule_normal => {
-                meta_data = rule_normal::process_rule_normal(meta_data, pair);
-            }
-
             Rule::function_definition => {
                 meta_data = functions::process_function_definition(meta_data, pair);
+            }
+
+            Rule::rule_normal => {
+                meta_data = rule_normal::process_rule_normal(meta_data, pair);
             }
 
             Rule::rule_comment => {}
