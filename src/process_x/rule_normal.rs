@@ -1,7 +1,10 @@
 use pest::iterators::Pair;
-use crate::{ compile::{ print_rule, Rule }, MetaData };
+use crate::{ compile::{ print_rule, Rule }, error::{ display_error, RCSSError }, MetaData, Result };
 
-pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Vec<MetaData> {
+pub fn process_rule_normal(
+    mut meta_data: Vec<MetaData>,
+    pair: Pair<Rule>
+) -> Result<Vec<MetaData>> {
     let inner_pairs = pair.into_inner();
     let mut current_selector: Vec<String> = Vec::new();
 
@@ -57,16 +60,24 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
                     }
                 }
 
-                if func_name.is_empty() {
-                    //TODO - Propagate Error
-                }
-
                 for data in &mut meta_data {
                     if let MetaData::Function { name, body } = data {
                         if func_name == *name {
                             func_declarations = body.clone();
                         }
                     }
+                }
+
+                if func_declarations.is_empty() {
+                    let err = RCSSError::FunctionError {
+                        file_path: "placeholder".to_string().into(), //FIXME - acc return the path
+                        function_name: func_name,
+                        message: "Function not declared yet".to_string(),
+                    };
+
+                    display_error(&err);
+
+                    return Err(err);
                 }
 
                 let joined_selector = current_selector.join(" ");
@@ -83,8 +94,6 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
                     }
                 }
 
-                println!("{:?}", found_key);
-
                 if !found_key {
                     meta_data.push(MetaData::StyleMap {
                         selector: key.to_string(),
@@ -99,5 +108,5 @@ pub fn process_rule_normal(mut meta_data: Vec<MetaData>, pair: Pair<Rule>) -> Ve
         }
     }
 
-    meta_data
+    Ok(meta_data)
 }

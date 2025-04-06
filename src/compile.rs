@@ -82,7 +82,7 @@ pub fn compile(
             }
 
             Rule::rule_normal => {
-                meta_data = rule_normal::process_rule_normal(meta_data, pair);
+                meta_data = rule_normal::process_rule_normal(meta_data, pair)?;
             }
 
             Rule::rule_comment => {}

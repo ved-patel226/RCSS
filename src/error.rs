@@ -186,6 +186,8 @@ pub fn display_error(error: &RCSSError) {
         }
 
         RCSSError::FunctionError { file_path, function_name, message } => {
+            // let location = format!("{} --> {}:{}", file_path.display(), line, column);
+
             println!("{}", " In File ".yellow().bold());
             println!("  {}", file_path.display().to_string().blue());
 

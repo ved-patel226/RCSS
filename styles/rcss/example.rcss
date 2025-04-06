@@ -14,8 +14,7 @@ fn padding() {
 
     h2 {
         color: red;
-    padding();
-
+        paddinsg();
     }
 
     padding();
