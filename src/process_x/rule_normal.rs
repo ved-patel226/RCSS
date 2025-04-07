@@ -1,14 +1,22 @@
 use pest::iterators::Pair;
-use crate::{ compile::{ print_rule, Rule }, error::{ display_error, RCSSError }, MetaData, Result };
+use crate::{
+    compile::{ print_rule, Rule },
+    error::{ display_error, RCSSError, get_error_context },
+    MetaData,
+    Result,
+};
+use std::collections::HashMap;
 
 pub fn process_rule_normal(
     mut meta_data: Vec<MetaData>,
     pair: Pair<Rule>,
     raw_scss: &str,
     input_path: &str
-) -> Result<Vec<MetaData>> {
+) -> Result<(Vec<MetaData>, HashMap<String, Vec<String>>)> {
     let inner_pairs = pair.into_inner();
     let mut current_selector: Vec<String> = Vec::new();
+
+    let mut declarations: HashMap<String, Vec<String>> = HashMap::new();
 
     for in_pair in inner_pairs {
         match in_pair.as_rule() {
@@ -23,27 +31,15 @@ pub fn process_rule_normal(
             }
 
             Rule::declaration => {
-                let mut found_key = false;
-
                 let joined_selector = current_selector.join(" ");
 
                 let key = joined_selector.trim();
                 let value = in_pair.as_str().trim().to_string();
 
-                for data in &mut meta_data {
-                    if let MetaData::StyleMap { selector, declarations } = data {
-                        if selector == key {
-                            found_key = true;
-                            declarations.push(value.clone());
-                        }
-                    }
-                }
-
-                if !found_key {
-                    meta_data.push(MetaData::StyleMap {
-                        selector: key.to_string(),
-                        declarations: vec![value],
-                    });
+                if let Some(values) = declarations.get_mut(key) {
+                    values.push(value.clone());
+                } else {
+                    declarations.insert(key.to_string(), vec![value.clone()]);
                 }
             }
 
@@ -93,22 +89,11 @@ pub fn process_rule_normal(
                 let joined_selector = current_selector.join(" ");
 
                 let key = joined_selector.trim();
-                let mut found_key = false;
 
-                for data in &mut meta_data {
-                    if let MetaData::StyleMap { selector, declarations } = data {
-                        if selector == key {
-                            found_key = true;
-                            declarations.extend(func_declarations.clone());
-                        }
-                    }
-                }
-
-                if !found_key {
-                    meta_data.push(MetaData::StyleMap {
-                        selector: key.to_string(),
-                        declarations: func_declarations.clone(),
-                    });
+                if let Some(values) = declarations.get_mut(key) {
+                    values.extend(func_declarations.clone());
+                } else {
+                    declarations.insert(key.to_string(), func_declarations.clone());
                 }
             }
 
@@ -118,23 +103,5 @@ pub fn process_rule_normal(
         }
     }
 
-    Ok(meta_data)
-}
-
-fn get_error_context(file_content: &str, error_line: usize, context_lines: usize) -> String {
-    let lines: Vec<&str> = file_content.lines().collect();
-
-    // Calculate start and end lines for context, ensuring bounds
-    let start_line = error_line.saturating_sub(context_lines);
-    let end_line = std::cmp::min(error_line + context_lines, lines.len());
-
-    // Build context string with line numbers
-    let mut context = String::new();
-    for i in start_line..end_line {
-        if i < lines.len() {
-            context.push_str(&format!("{}\n", lines[i]));
-        }
-    }
-
-    context
+    Ok((meta_data, declarations))
 }

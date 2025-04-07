@@ -21,7 +21,7 @@ pub fn print_rule(pair: pest::iterators::Pair<Rule>) {
 pub fn compile(
     input_path: &str,
     output_path: &str,
-    project_meta_data: &HashMap<String, Vec<MetaData>>,
+    project_meta_data: &mut HashMap<String, Vec<MetaData>>,
     verbose: bool,
     initial_compile: bool
 ) -> Result<HashMap<String, Vec<MetaData>>> {
@@ -60,6 +60,7 @@ pub fn compile(
 
     let mut css_output = String::new();
     let mut meta_data: Vec<MetaData> = Vec::new();
+    let mut declarations: HashMap<String, Vec<String>> = HashMap::new();
 
     for pair in pairs {
         match pair.as_rule() {
@@ -82,12 +83,14 @@ pub fn compile(
             }
 
             Rule::rule_normal => {
-                meta_data = rule_normal::process_rule_normal(
+                let (new_meta_data, new_declarations) = rule_normal::process_rule_normal(
                     meta_data,
                     pair,
                     &raw_rcss,
                     &input_path
                 )?;
+                meta_data = new_meta_data;
+                declarations = new_declarations;
             }
 
             Rule::rule_comment => {}
@@ -100,7 +103,37 @@ pub fn compile(
         }
     }
 
-    println!("{:?}", meta_data);
+    project_meta_data.insert(input_path.to_string(), meta_data);
+
+    let css_output = css_map_to_string(&declarations);
+    fs::write(output_path, css_output)?;
 
     Ok(project_meta_data.clone())
+}
+
+fn css_map_to_string(css_map: &HashMap<String, Vec<String>>) -> String {
+    let mut css_string = String::new();
+
+    for (selector, properties) in css_map {
+        // Start building the CSS rule
+        css_string.push_str(selector);
+        css_string.push_str(" {\n");
+
+        // Add each unique property
+        for property in properties {
+            css_string.push_str("    ");
+            css_string.push_str(property);
+            css_string.push('\n');
+        }
+
+        css_string.push_str("}\n\n");
+    }
+
+    // Remove the last newline if the string is not empty
+    if !css_string.is_empty() {
+        css_string.pop();
+        css_string.pop();
+    }
+
+    css_string
 }

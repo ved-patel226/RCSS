@@ -1,16 +1,12 @@
 .container {
+    color: blue;
+    filter: blur(10px);
     padding: 20px;
     color: red;
-}.container h2 {
+}
+
+.container h2 {
     color: red;
-}h4 {
-    width: 50%;
-    color: green;
-}@media screen and (max-width: red){
-    .container {
-        width: 100%;
-    }
-    h4 {
-        width: 100%;
-    }
+    padding: 20px;
+    color: red;
 }

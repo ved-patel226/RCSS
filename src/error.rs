@@ -115,8 +115,7 @@ fn display_error_with_context(
     line: usize,
     column: usize,
     message: &str,
-    context: &str,
-    error_type: &str
+    context: &str
 ) {
     let location = format!("{} --> {}:{}", file_path.display(), line, column);
     println!("{}", location);
@@ -184,7 +183,7 @@ pub fn display_error(error: &RCSSError) {
                 .map(|s| format!("expected:{}", s))
                 .unwrap_or_else(|| message.to_string());
 
-            display_error_with_context(file_path, *line, *column, &trimmed, context, "SyntaxError");
+            display_error_with_context(file_path, *line, *column, &trimmed, context);
         }
 
         RCSSError::CompilationError { file_path, message } => {
@@ -242,19 +241,37 @@ pub fn display_error(error: &RCSSError) {
             println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
-        RCSSError::FunctionError { file_path, function_name, message, line, column, context } => {
-            display_error_with_context(
-                file_path,
-                *line,
-                *column,
-                message,
-                context,
-                "FunctionError"
-            );
+        RCSSError::FunctionError {
+            file_path,
+            function_name: _,
+            message,
+            line,
+            column,
+            context,
+        } => {
+            display_error_with_context(file_path, *line, *column, message, context);
         }
     }
 
     println!("\n{}\n", "For help, open an issue on GitHub.".dimmed());
+}
+
+pub fn get_error_context(file_content: &str, error_line: usize, context_lines: usize) -> String {
+    let lines: Vec<&str> = file_content.lines().collect();
+
+    // Calculate start and end lines for context, ensuring bounds
+    let start_line = error_line.saturating_sub(context_lines);
+    let end_line = std::cmp::min(error_line + context_lines, lines.len());
+
+    // Build context string with line numbers
+    let mut context = String::new();
+    for i in start_line..end_line {
+        if i < lines.len() {
+            context.push_str(&format!("{}\n", lines[i]));
+        }
+    }
+
+    context
 }
 
 /// For displaying warnings that aren't critical errors

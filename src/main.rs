@@ -20,10 +20,6 @@ use std::collections::HashMap;
 #[derive(Debug, Clone)]
 #[allow(unused)]
 pub enum MetaData {
-    StyleMap {
-        selector: String,
-        declarations: Vec<String>,
-    },
     Variables {
         name: String,
         value: String,
@@ -55,24 +51,15 @@ fn main() -> Result<()> {
     let current_path = std::env::current_dir()?;
 
     let rcss_input_path = current_path.join(input_path);
-    let css_input_path = rcss_input_path.join("../css").canonicalize()?;
+    let css_input_path = rcss_input_path.join("../css");
+    if !css_input_path.exists() {
+        std::fs::create_dir_all(&css_input_path)?;
+    }
+    let css_input_path = css_input_path.canonicalize()?;
 
     let verbose = matches.get_flag("verbose");
 
     let mut project_meta_data: HashMap<String, Vec<MetaData>> = HashMap::new();
-
-    if !rcss_input_path.exists() {
-        println!(
-            "The specified RCSS input path does not exist. Creating it: {:?}",
-            rcss_input_path
-        );
-        std::fs::create_dir_all(&rcss_input_path)?;
-    }
-
-    if !css_input_path.exists() {
-        println!("The specified CSS input path does not exist. Creating it: {:?}", css_input_path);
-        std::fs::create_dir_all(&css_input_path)?;
-    }
 
     let mut rcss_files = Vec::new();
 
@@ -105,7 +92,7 @@ fn main() -> Result<()> {
             let Err(_) = compile(
                 rcss_input_path.join(rcss_file).to_str().unwrap(),
                 css_input_path.join(rcss_file).with_extension("css").to_str().unwrap(),
-                &project_meta_data,
+                &mut project_meta_data,
                 verbose,
                 true // initial_compile
             )
