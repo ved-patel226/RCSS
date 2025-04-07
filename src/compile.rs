@@ -4,6 +4,8 @@ use pest_derive::Parser;
 use std::collections::HashMap;
 use crate::MetaData;
 use std::time::Instant;
+use colored::*;
+use chrono::Local;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
@@ -107,6 +109,18 @@ pub fn compile(
 
     let css_output = css_map_to_string(&declarations);
     fs::write(output_path, css_output)?;
+
+    let now = Local::now();
+    let formatted_time = now.format("%I:%M:%S %p");
+
+    let elapsed_time = start_time.elapsed();
+
+    println!(
+        "{} {} {}",
+        format!("CSS written to {}", output_path).green(),
+        format!("in {:.2?}", elapsed_time).truecolor(128, 128, 128),
+        format!("@ {}", formatted_time).truecolor(128, 128, 128)
+    );
 
     Ok(project_meta_data.clone())
 }

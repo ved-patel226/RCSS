@@ -94,7 +94,7 @@ fn main() -> Result<()> {
                 css_input_path.join(rcss_file).with_extension("css").to_str().unwrap(),
                 &mut project_meta_data,
                 verbose,
-                true // initial_compile
+                true
             )
         {
             initial_compile_errors += 1;
