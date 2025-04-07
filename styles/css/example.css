@@ -1,12 +1,12 @@
-.container h2 {
-    color: &var;
+.container {
     padding: 20px;
-    color: red;
 }
 
-.container {
+.container h2 {
     color: blue;
-    filter: blur(10px);
-    padding: 20px;
-    color: red;
+}
+
+h4 {
+    width: 50%;
+    color: green;
 }

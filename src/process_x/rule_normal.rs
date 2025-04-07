@@ -9,14 +9,13 @@ use std::collections::HashMap;
 
 pub fn process_rule_normal(
     mut meta_data: Vec<MetaData>,
+    mut declarations: HashMap<String, Vec<String>>,
     pair: Pair<Rule>,
     raw_scss: &str,
     input_path: &str
 ) -> Result<(Vec<MetaData>, HashMap<String, Vec<String>>)> {
     let inner_pairs = pair.into_inner();
     let mut current_selector: Vec<String> = Vec::new();
-
-    let mut declarations: HashMap<String, Vec<String>> = HashMap::new();
 
     for in_pair in inner_pairs {
         match in_pair.as_rule() {

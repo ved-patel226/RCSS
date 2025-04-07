@@ -87,6 +87,7 @@ pub fn compile(
             Rule::rule_normal => {
                 let (new_meta_data, new_declarations) = rule_normal::process_rule_normal(
                     meta_data,
+                    declarations,
                     pair,
                     &raw_rcss,
                     &input_path
@@ -106,6 +107,8 @@ pub fn compile(
     }
 
     project_meta_data.insert(input_path.to_string(), meta_data);
+
+    println!("{:?}", declarations);
 
     let css_output = css_map_to_string(&declarations);
     fs::write(output_path, css_output)?;

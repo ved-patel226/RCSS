@@ -1,22 +1,20 @@
-use rcss::common::variables::*;
-
-let var: "5";
+let variable: "#FFFFFF";
+let breakpoint: "768px";
 
 fn padding() {
-    padding: 20px;
-    color: red;
+  padding: 20px;
 }
 
 .container {
-    color: blue;
-    filter: blur(10px);
-
-
-    h2 {
-        color: &var;
-        padding();
-    }
-
     padding();
 
+    h2 {
+        color: blue;
+    }
 }
+
+h4 {
+    width: 50%;
+    color: green;
+}
+
