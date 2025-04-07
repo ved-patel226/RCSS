@@ -79,11 +79,7 @@ pub fn process_rule_normal(
                     let err = RCSSError::FunctionError {
                         file_path: input_path.to_string().into(), //FIXME - acc return the path
                         function_name: func_name,
-                        message: format!(
-                            "Function not declared yet (line: {}, column: {})",
-                            line,
-                            column
-                        ),
+                        message: "Function not declared in scope".to_string(),
                         line: line,
                         column: column,
                         context: context,

@@ -123,7 +123,7 @@ fn display_error_with_context(
 
     println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
     println!("{}", "│".bright_red());
-    println!("{} {}  {}", "│".bright_red(), error_type.red().bold(), message.white().bold());
+    println!("{}  {}", "│".bright_red(), message.white().bold());
     println!("{}", "│".bright_red());
 
     // Display code snippet with highlighting
@@ -178,10 +178,13 @@ pub fn display_error(error: &RCSSError) {
         }
 
         RCSSError::ParseError { file_path, line, column, message, context } => {
-            let location = format!("{} --> {}:{}", file_path.display(), line, column);
-            let trimmed = message.split("expected").nth(1).unwrap_or(&message);
+            let trimmed = message
+                .split("expected")
+                .nth(1)
+                .map(|s| format!("expected:{}", s))
+                .unwrap_or_else(|| message.to_string());
 
-            display_error_with_context(file_path, *line, *column, message, context, "SyntaxError");
+            display_error_with_context(file_path, *line, *column, &trimmed, context, "SyntaxError");
         }
 
         RCSSError::CompilationError { file_path, message } => {
