@@ -31,8 +31,11 @@ pub enum RCSSError {
     },
     FunctionError {
         file_path: PathBuf,
+        line: usize,
+        column: usize,
         function_name: String,
         message: String,
+        context: String,
     },
 }
 
@@ -73,13 +76,23 @@ impl fmt::Display for RCSSError {
                     message
                 )
             }
-            RCSSError::FunctionError { file_path, function_name, message } => {
+            RCSSError::FunctionError {
+                file_path,
+                line,
+                column,
+                function_name,
+                message,
+                context,
+            } => {
                 write!(
                     f,
-                    "Function Error in {} for '{}' - {}",
-                    file_path.display(),
+                    "Function Error for func: {} at {}:{}:{} - {} (Context: {})",
                     function_name,
-                    message
+                    file_path.display(),
+                    line,
+                    column,
+                    message,
+                    context
                 )
             }
         }
@@ -92,6 +105,49 @@ impl From<std::io::Error> for RCSSError {
     fn from(error: std::io::Error) -> Self {
         RCSSError::IoError(error)
     }
+}
+
+// ...existing code...
+
+/// Displays a stylized parse error message with code context
+fn display_error_with_context(
+    file_path: &std::path::Path,
+    line: usize,
+    column: usize,
+    message: &str,
+    context: &str,
+    error_type: &str
+) {
+    let location = format!("{} --> {}:{}", file_path.display(), line, column);
+    println!("{}", location);
+
+    println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+    println!("{}", "│".bright_red());
+    println!("{} {}  {}", "│".bright_red(), error_type.red().bold(), message.white().bold());
+    println!("{}", "│".bright_red());
+
+    // Display code snippet with highlighting
+    let lines: Vec<&str> = context.lines().collect();
+
+    for (i, line_content) in lines.iter().enumerate() {
+        let line_num = (line - 1 + i).to_string();
+        println!("{} {: >3} │ {}", "│".bright_red(), line_num.white(), line_content);
+
+        if i == 1 {
+            // Highlight the error position with an arrow
+            let mut pointer = " ".repeat(column);
+            pointer.push('↑');
+            println!(
+                "{} {: >3} │ {}",
+                "│".bright_red(),
+                " ".bright_yellow(),
+                pointer.bright_red().bold()
+            );
+        }
+    }
+
+    println!("{}", "│".bright_red());
+    println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
 }
 
 /// Displays a stylized error message to the console
@@ -113,89 +169,85 @@ pub fn display_error(error: &RCSSError) {
     // Display the error message
     match error {
         RCSSError::IoError(err) => {
-            println!("{}", " File System Error ".red().bold());
-            println!("{}", err);
-        }
-
-        RCSSError::ParseError { file_path, line, column, message, context } => {
-            let location = format!("{} --> {}:{}", file_path.display(), line, column);
-
-            println!("{}\n", location);
-            let trimmed = message.split("expected").nth(1).unwrap_or(&message);
-            println!("{}  Expected: {}\n", "→".red().bold(), trimmed.white().bold());
-
-            // Display code snippet with highlighting
-            let lines: Vec<&str> = context.lines().collect();
             println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
             println!("{}", "│".bright_red());
-
-            for (i, line_content) in lines.iter().enumerate() {
-                let line_num = (line - 1 + i).to_string();
-                println!("{} {: >3} │ {}", "│".bright_red(), line_num.white(), line_content);
-
-                if i == 1 {
-                    // Highlight the error position with an arrow
-                    let mut pointer = " ".repeat(*column);
-                    pointer.push('↑');
-                    println!(
-                        "{} {: >3} │ {}",
-                        "│".bright_red(),
-                        " ".bright_yellow(),
-                        pointer.bright_red().bold()
-                    );
-                }
-            }
-
+            println!("{} {}", "│".bright_red(), " File System Error ".red().bold());
+            println!("{} {}", "│".bright_red(), err);
             println!("{}", "│".bright_red());
             println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
-        RCSSError::CompilationError { file_path, message } => {
-            println!("{}", " File ".yellow().bold());
-            println!("  {}", file_path.display().to_string().blue());
+        RCSSError::ParseError { file_path, line, column, message, context } => {
+            let location = format!("{} --> {}:{}", file_path.display(), line, column);
+            let trimmed = message.split("expected").nth(1).unwrap_or(&message);
 
-            println!("\n{}", " Message ".yellow().bold());
-            println!("  {}", message);
+            display_error_with_context(file_path, *line, *column, message, context, "SyntaxError");
+        }
+
+        RCSSError::CompilationError { file_path, message } => {
+            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " File ".red().bold());
+            println!("{} {}", "│".bright_red(), file_path.display().to_string().blue());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " Message ".red().bold());
+            println!("{} {}", "│".bright_red(), message);
+            println!("{}", "│".bright_red());
+            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
         RCSSError::ConfigError(message) => {
-            println!("{}", " Configuration Issue ".yellow().bold());
-            println!("  {}", message);
+            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " Configuration Issue ".red().bold());
+            println!("{} {}", "│".bright_red(), message);
+            println!("{}", "│".bright_red());
+            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
         RCSSError::ImportError { file_path, import_path, message } => {
-            println!("{}", " In File ".yellow().bold());
-            println!("  {}", file_path.display().to_string().blue());
+            let location = format!("{} --> {}:{}", file_path.display(), "line", "column");
 
-            println!("\n{}", " Import Path ".yellow().bold());
-            println!("  {}", import_path);
-
-            println!("\n{}", " Message ".yellow().bold());
-            println!("  {}", message);
+            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), location.red().bold());
+            println!("{} {}", "│".bright_red(), file_path.display().to_string().blue());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " Import Path ".red().bold());
+            println!("{} {}", "│".bright_red(), import_path);
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " Message ".red().bold());
+            println!("{} {}", "│".bright_red(), message);
+            println!("{}", "│".bright_red());
+            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
         RCSSError::VariableError { file_path, variable_name, message } => {
-            println!("{}", " In File ".yellow().bold());
-            println!("  {}", file_path.display().to_string().blue());
+            let location = format!("{} --> {}:{}", file_path.display(), "line", "column");
 
-            println!("\n{}", " Variable ".yellow().bold());
-            println!("  {}", variable_name);
-
-            println!("\n{}", " Message ".yellow().bold());
-            println!("  {}", message);
+            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), location.red().bold());
+            println!("{} {}", "│".bright_red(), file_path.display().to_string().blue());
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " Variable ".red().bold());
+            println!("{} {}", "│".bright_red(), variable_name);
+            println!("{}", "│".bright_red());
+            println!("{} {}", "│".bright_red(), " Message ".red().bold());
+            println!("{} {}", "│".bright_red(), message);
+            println!("{}", "│".bright_red());
+            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
-        RCSSError::FunctionError { file_path, function_name, message } => {
-            // let location = format!("{} --> {}:{}", file_path.display(), line, column);
-
-            println!("{}", " In File ".yellow().bold());
-            println!("  {}", file_path.display().to_string().blue());
-
-            println!("\n{}", " Function ".yellow().bold());
-            println!("  {}", function_name);
-
-            println!("\n{}", " Message ".yellow().bold());
-            println!("  {}", message);
+        RCSSError::FunctionError { file_path, function_name, message, line, column, context } => {
+            display_error_with_context(
+                file_path,
+                *line,
+                *column,
+                message,
+                context,
+                "FunctionError"
+            );
         }
     }
 

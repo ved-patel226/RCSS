@@ -3,7 +3,9 @@ use crate::{ compile::{ print_rule, Rule }, error::{ display_error, RCSSError },
 
 pub fn process_rule_normal(
     mut meta_data: Vec<MetaData>,
-    pair: Pair<Rule>
+    pair: Pair<Rule>,
+    raw_scss: &str,
+    input_path: &str
 ) -> Result<Vec<MetaData>> {
     let inner_pairs = pair.into_inner();
     let mut current_selector: Vec<String> = Vec::new();
@@ -69,10 +71,22 @@ pub fn process_rule_normal(
                 }
 
                 if func_declarations.is_empty() {
+                    let position = in_pair.line_col();
+                    let line = position.0;
+                    let column = position.1;
+                    let context = get_error_context(raw_scss, line, 2);
+
                     let err = RCSSError::FunctionError {
-                        file_path: "placeholder".to_string().into(), //FIXME - acc return the path
+                        file_path: input_path.to_string().into(), //FIXME - acc return the path
                         function_name: func_name,
-                        message: "Function not declared yet".to_string(),
+                        message: format!(
+                            "Function not declared yet (line: {}, column: {})",
+                            line,
+                            column
+                        ),
+                        line: line,
+                        column: column,
+                        context: context,
                     };
 
                     display_error(&err);
@@ -109,4 +123,22 @@ pub fn process_rule_normal(
     }
 
     Ok(meta_data)
+}
+
+fn get_error_context(file_content: &str, error_line: usize, context_lines: usize) -> String {
+    let lines: Vec<&str> = file_content.lines().collect();
+
+    // Calculate start and end lines for context, ensuring bounds
+    let start_line = error_line.saturating_sub(context_lines);
+    let end_line = std::cmp::min(error_line + context_lines, lines.len());
+
+    // Build context string with line numbers
+    let mut context = String::new();
+    for i in start_line..end_line {
+        if i < lines.len() {
+            context.push_str(&format!("{}\n", lines[i]));
+        }
+    }
+
+    context
 }
