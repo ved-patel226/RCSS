@@ -51,8 +51,6 @@ pub fn process_rule_normal(
                 if !variable_reference.is_empty() {
                     let mut found_var = false;
 
-                    //ANCHOR -
-
                     for md in &meta_data {
                         if let MetaData::Variables { name, value } = md {
                             if name == variable_reference.trim_start_matches('&') {
@@ -130,8 +128,6 @@ pub fn process_rule_normal(
                     let line = position.0;
                     let column = position.1;
                     let context = get_error_context(raw_scss, line, 2);
-
-                    //ANCHOR -
 
                     let err = RCSSError::FunctionError {
                         file_path: input_path.to_string().into(),

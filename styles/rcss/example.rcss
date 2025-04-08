@@ -11,7 +11,7 @@ fn padding() {
     padding();
 
     h2 {
-        color: &variables;
+        color: &variable;
     }
 }
 

@@ -107,8 +107,6 @@ pub fn compile(
 
     project_meta_data.insert(input_path.to_string(), meta_data.clone());
 
-    println!("{:?}", declarations);
-
     let css_output = css_map_to_string(&declarations);
     fs::write(output_path, css_output)?;
 
