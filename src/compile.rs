@@ -2,7 +2,7 @@ use std::fs;
 use pest::Parser;
 use pest_derive::Parser;
 use std::collections::HashMap;
-use crate::MetaData;
+use crate::{ error::display_warning, MetaData };
 use std::time::Instant;
 use colored::*;
 use chrono::Local;
@@ -86,7 +86,7 @@ pub fn compile(
 
             Rule::rule_normal => {
                 let (new_meta_data, new_declarations) = rule_normal::process_rule_normal(
-                    meta_data,
+                    meta_data.clone(),
                     declarations,
                     pair,
                     &raw_rcss,
@@ -106,7 +106,7 @@ pub fn compile(
         }
     }
 
-    project_meta_data.insert(input_path.to_string(), meta_data);
+    project_meta_data.insert(input_path.to_string(), meta_data.clone());
 
     println!("{:?}", declarations);
 

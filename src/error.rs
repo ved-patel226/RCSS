@@ -118,9 +118,11 @@ fn display_error_with_context(
     context: &str
 ) {
     let location = format!("{} --> {}:{}", file_path.display(), line, column);
+    let length = std::cmp::min(message.len() + 10, 110);
+
     println!("{}", location);
 
-    println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
+    println!("{}{}", "╭".bright_red(), "─".repeat(length).bright_red());
     println!("{}", "│".bright_red());
     println!("{}  {}", "│".bright_red(), message.white().bold());
     println!("{}", "│".bright_red());
@@ -146,7 +148,7 @@ fn display_error_with_context(
     }
 
     println!("{}", "│".bright_red());
-    println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
+    println!("{}{}", "╰".bright_red(), "─".repeat(length).bright_red());
 }
 
 /// Displays a stylized error message to the console
@@ -278,11 +280,18 @@ pub fn get_error_context(file_content: &str, error_line: usize, context_lines: u
 #[allow(unused)]
 pub fn display_warning(message: &str) {
     let header = " WARNING ".black().on_yellow().bold();
-    let top_border = "═".repeat(9).yellow();
+    let length = std::cmp::min(message.len(), 100);
 
-    println!("{}", header);
+    println!("\n{}", header);
 
-    println!("  {}\n", message);
+    println!("{}{}", "╭".yellow(), "─".repeat(length).yellow());
+    println!("{}", "│".yellow());
+    println!("{} {}", "│".yellow(), message);
+    println!("{}", "│".yellow());
+    println!("{}{}", "╰".yellow(), "─".repeat(length).yellow());
+
+    println!();
 }
+
 /// A Result type using RCSSError
 pub type Result<T> = std::result::Result<T, RCSSError>;

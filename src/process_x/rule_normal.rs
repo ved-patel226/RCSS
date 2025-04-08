@@ -30,15 +30,54 @@ pub fn process_rule_normal(
             }
 
             Rule::declaration => {
+                let declaration_inner = in_pair.clone().into_inner();
+                let mut variable_reference = String::new();
+
+                for dec_in_pair in declaration_inner {
+                    match dec_in_pair.as_rule() {
+                        Rule::variable_reference => {
+                            variable_reference = dec_in_pair.as_str().to_string();
+                        }
+
+                        _ => {}
+                    }
+                }
+
                 let joined_selector = current_selector.join(" ");
 
                 let key = joined_selector.trim();
-                let value = in_pair.as_str().trim().to_string();
+                let default_value = in_pair.as_str().trim().to_string();
 
-                if let Some(values) = declarations.get_mut(key) {
-                    values.push(value.clone());
+                if !variable_reference.is_empty() {
+                    let mut found_var = false;
+
+                    for md in &meta_data {
+                        if let MetaData::Variables { name, value } = md {
+                            if name == variable_reference.trim_start_matches('&') {
+                                found_var = true;
+
+                                let replaced_value = default_value.replace(
+                                    &variable_reference,
+                                    value
+                                );
+                                if let Some(values) = declarations.get_mut(key) {
+                                    values.push(replaced_value);
+                                } else {
+                                    declarations.insert(key.to_string(), vec![replaced_value]);
+                                }
+                            }
+                        }
+                    }
+
+                    if found_var == false {
+                        //TODO - Display error
+                    }
                 } else {
-                    declarations.insert(key.to_string(), vec![value.clone()]);
+                    if let Some(values) = declarations.get_mut(key) {
+                        values.push(default_value.clone());
+                    } else {
+                        declarations.insert(key.to_string(), vec![default_value.clone()]);
+                    }
                 }
             }
 
