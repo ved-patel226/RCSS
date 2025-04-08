@@ -2,14 +2,13 @@ use std::fs;
 use pest::Parser;
 use pest_derive::Parser;
 use std::collections::HashMap;
-use crate::{ error::display_warning, MetaData };
 use std::time::Instant;
 use colored::*;
 use chrono::Local;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
-use crate::{ rule_normal, variables, functions };
+use crate::{ rule_normal, variables, functions, MetaData };
 
 #[derive(Parser)]
 #[grammar = "rcss.pest"]

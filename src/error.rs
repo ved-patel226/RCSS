@@ -26,8 +26,11 @@ pub enum RCSSError {
     },
     VariableError {
         file_path: PathBuf,
+        line: usize,
+        column: usize,
         variable_name: String,
         message: String,
+        context: String,
     },
     FunctionError {
         file_path: PathBuf,
@@ -67,13 +70,23 @@ impl fmt::Display for RCSSError {
                     message
                 )
             }
-            RCSSError::VariableError { file_path, variable_name, message } => {
+            RCSSError::VariableError {
+                file_path,
+                variable_name,
+                message,
+                line,
+                column,
+                context,
+            } => {
                 write!(
                     f,
-                    "Variable Error in {} for '{}' - {}",
-                    file_path.display(),
+                    "Variable Error for var: {} at {}:{}:{} - {} (Context: {})",
                     variable_name,
-                    message
+                    file_path.display(),
+                    line,
+                    column,
+                    message,
+                    context
                 )
             }
             RCSSError::FunctionError {
@@ -106,8 +119,6 @@ impl From<std::io::Error> for RCSSError {
         RCSSError::IoError(error)
     }
 }
-
-// ...existing code...
 
 /// Displays a stylized parse error message with code context
 fn display_error_with_context(
@@ -226,21 +237,15 @@ pub fn display_error(error: &RCSSError) {
             println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
-        RCSSError::VariableError { file_path, variable_name, message } => {
-            let location = format!("{} --> {}:{}", file_path.display(), "line", "column");
-
-            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
-            println!("{}", "│".bright_red());
-            println!("{} {}", "│".bright_red(), location.red().bold());
-            println!("{} {}", "│".bright_red(), file_path.display().to_string().blue());
-            println!("{}", "│".bright_red());
-            println!("{} {}", "│".bright_red(), " Variable ".red().bold());
-            println!("{} {}", "│".bright_red(), variable_name);
-            println!("{}", "│".bright_red());
-            println!("{} {}", "│".bright_red(), " Message ".red().bold());
-            println!("{} {}", "│".bright_red(), message);
-            println!("{}", "│".bright_red());
-            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
+        RCSSError::VariableError {
+            file_path,
+            variable_name: _,
+            message,
+            line,
+            column,
+            context,
+        } => {
+            display_error_with_context(file_path, *line, *column, message, context);
         }
 
         RCSSError::FunctionError {

@@ -51,6 +51,8 @@ pub fn process_rule_normal(
                 if !variable_reference.is_empty() {
                     let mut found_var = false;
 
+                    //ANCHOR -
+
                     for md in &meta_data {
                         if let MetaData::Variables { name, value } = md {
                             if name == variable_reference.trim_start_matches('&') {
@@ -70,7 +72,26 @@ pub fn process_rule_normal(
                     }
 
                     if found_var == false {
-                        //TODO - Display error
+                        let position = in_pair.line_col();
+                        let line = position.0;
+                        let column = position.1;
+                        let context = get_error_context(raw_scss, line, 2);
+
+                        let err = RCSSError::VariableError {
+                            file_path: input_path.into(),
+                            line: line,
+                            column: column,
+                            variable_name: variable_reference.trim_start_matches("&").to_string(),
+                            message: format!(
+                                "Could not find variable: {}",
+                                variable_reference.trim_start_matches("&")
+                            ),
+                            context: context,
+                        };
+
+                        display_error(&err);
+
+                        return Err(err);
                     }
                 } else {
                     if let Some(values) = declarations.get_mut(key) {
@@ -110,8 +131,10 @@ pub fn process_rule_normal(
                     let column = position.1;
                     let context = get_error_context(raw_scss, line, 2);
 
+                    //ANCHOR -
+
                     let err = RCSSError::FunctionError {
-                        file_path: input_path.to_string().into(), //FIXME - acc return the path
+                        file_path: input_path.to_string().into(),
                         function_name: func_name,
                         message: "Function not declared in scope".to_string(),
                         line: line,
