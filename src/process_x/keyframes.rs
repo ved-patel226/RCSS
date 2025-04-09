@@ -2,6 +2,7 @@ use pest::iterators::Pair;
 use crate::{ compile::{ print_rule, Rule }, MetaData };
 use std::collections::HashMap;
 
+//TODO - Allow variables here
 pub fn process_keyframes_definition(
     mut at_methods: HashMap<String, HashMap<String, Vec<String>>>,
     pair: Pair<Rule>
