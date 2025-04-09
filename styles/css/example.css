@@ -3,17 +3,17 @@ h4 {
     color: green;
 }
 
-.container h2 h4 {
-    width: 50%;
-    color: green;
+.container h2 {
+    color: #FFFFFF;
 }
 
 .container {
     padding: 20px;
 }
 
-.container h2 {
-    color: #FFFFFF;
+.container h2 h4 {
+    width: 50%;
+    color: green;
 }
 
 @keyframes hello {
@@ -39,13 +39,13 @@ h4 {
         opacity: 1;
     }
 
-    100% {
-        color: orange;
-    }
-
     0% {
         color: red;
         opacity: 0;
+    }
+
+    100% {
+        color: orange;
     }
 
 }

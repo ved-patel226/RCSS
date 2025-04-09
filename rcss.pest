@@ -1,6 +1,14 @@
 // Add this in the CSS section, near the beginning
-rcss = _{ SOI ~ (WHITE_SPACE* ~ (import_statement | function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
+rcss = _{ SOI ~ (WHITE_SPACE* ~ (at_methods | import_statement | function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
 
+at_methods = { 
+    WHITE_SPACE* ~ "@" ~ (
+        "import" ~ WHITE_SPACE+ ~ "url" ~ "(" ~ string_literal ~ ")" ~ WHITE_SPACE* ~ ";" |
+        "charset" ~ WHITE_SPACE+ ~ string_literal ~ WHITE_SPACE* ~ ";" |
+        "namespace" ~ WHITE_SPACE+ ~ (string_literal ~ WHITE_SPACE+)? ~ identifier ~ WHITE_SPACE* ~ ";" |
+        ANY ~ WHITE_SPACE ~ ANY ~ WHITE_SPACE ~ ";"
+    )
+}
 
 //
 // IMPORTS
