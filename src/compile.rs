@@ -8,7 +8,7 @@ use chrono::Local;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
-use crate::{ rule_normal, variables, functions, MetaData };
+use crate::{ rule_normal, variables, functions, keyframes, MetaData };
 
 #[derive(Parser)]
 #[grammar = "rcss.pest"]
@@ -62,6 +62,7 @@ pub fn compile(
     let mut css_output = String::new();
     let mut meta_data: Vec<MetaData> = Vec::new();
     let mut declarations: HashMap<String, Vec<String>> = HashMap::new();
+    let mut at_methods: HashMap<String, HashMap<String, Vec<String>>> = HashMap::new();
 
     for pair in pairs {
         match pair.as_rule() {
@@ -95,6 +96,10 @@ pub fn compile(
                 declarations = new_declarations;
             }
 
+            Rule::keyframes_rule => {
+                at_methods = keyframes::process_keyframes_definition(at_methods, pair);
+            }
+
             Rule::rule_comment => {}
 
             Rule::EOI => {}
@@ -107,7 +112,7 @@ pub fn compile(
 
     project_meta_data.insert(input_path.to_string(), meta_data.clone());
 
-    let css_output = css_map_to_string(&declarations);
+    let css_output = css_map_to_string(&declarations, &at_methods);
     fs::write(output_path, css_output)?;
 
     let now = Local::now();
@@ -125,9 +130,13 @@ pub fn compile(
     Ok(project_meta_data.clone())
 }
 
-fn css_map_to_string(css_map: &HashMap<String, Vec<String>>) -> String {
+fn css_map_to_string(
+    css_map: &HashMap<String, Vec<String>>,
+    at_methods: &HashMap<String, HashMap<String, Vec<String>>>
+) -> String {
     let mut css_string = String::new();
 
+    // Process regular CSS rules
     for (selector, properties) in css_map {
         // Start building the CSS rule
         css_string.push_str(selector);
@@ -143,10 +152,36 @@ fn css_map_to_string(css_map: &HashMap<String, Vec<String>>) -> String {
         css_string.push_str("}\n\n");
     }
 
+    // Process at-methods like @keyframes
+    for (at_rule, keyframes) in at_methods {
+        css_string.push_str(at_rule);
+        css_string.push_str(" {\n");
+
+        // Process each keyframe
+        for (keyframe_selector, properties) in keyframes {
+            css_string.push_str("    ");
+            css_string.push_str(keyframe_selector);
+            css_string.push_str(" {\n");
+
+            // Add each property for this keyframe
+            for property in properties {
+                css_string.push_str("        ");
+                css_string.push_str(property);
+                css_string.push('\n');
+            }
+
+            css_string.push_str("    }\n\n");
+        }
+
+        css_string.push_str("}\n\n");
+    }
+
     // Remove the last newline if the string is not empty
     if !css_string.is_empty() {
         css_string.pop();
-        css_string.pop();
+        if !css_string.is_empty() {
+            css_string.pop();
+        }
     }
 
     css_string

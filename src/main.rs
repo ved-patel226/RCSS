@@ -6,9 +6,10 @@ pub mod process_x {
     pub mod variables;
     pub mod rule_normal;
     pub mod functions;
+    pub mod keyframes;
 }
 
-use process_x::{ variables, rule_normal, functions };
+use process_x::{ variables, rule_normal, functions, keyframes };
 
 use error::Result;
 
@@ -27,6 +28,10 @@ pub enum MetaData {
     Function {
         name: String,
         body: Vec<String>,
+    },
+    Keyframes {
+        name: String,
+        body: HashMap<String, Vec<String>>,
     },
 }
 

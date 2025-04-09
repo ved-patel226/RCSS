@@ -12,6 +12,11 @@ fn padding() {
 
     h2 {
         color: &variable;
+
+        h4 {
+            width: 50%;
+            color: green;
+        }
     }
 }
 
@@ -20,3 +25,34 @@ h4 {
     color: green;
 }
 
+@keyframes hello {
+    0% {
+        color: red;
+        opacity: 0;
+    }
+
+    10% {
+        color: blue;
+        opacity: 1;
+    }
+
+    100% {
+        color: orange;
+    }
+}
+
+@keyframes hello2 {
+    0% {
+        color: red;
+        opacity: 0;
+    }
+
+    10% {
+        color: blue;
+        opacity: 1;
+    }
+
+    100% {
+        color: orange;
+    }
+}

@@ -1,12 +1,51 @@
-.container {
-    padding: 20px;
+.container h2 h4 {
+    width: 50%;
+    color: green;
+}
+
+h4 {
+    width: 50%;
+    color: green;
 }
 
 .container h2 {
     color: #FFFFFF;
 }
 
-h4 {
-    width: 50%;
-    color: green;
+.container {
+    padding: 20px;
+}
+
+@keyframes hello2 {
+    100% {
+        color: orange;
+    }
+
+    0% {
+        color: red;
+        opacity: 0;
+    }
+
+    10% {
+        color: blue;
+        opacity: 1;
+    }
+
+}
+
+@keyframes hello {
+    0% {
+        color: red;
+        opacity: 0;
+    }
+
+    10% {
+        color: blue;
+        opacity: 1;
+    }
+
+    100% {
+        color: orange;
+    }
+
 }
