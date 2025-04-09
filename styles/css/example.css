@@ -1,22 +1,27 @@
-.container h2 h4 {
-    width: 50%;
-    color: green;
-}
-
 h4 {
     width: 50%;
     color: green;
 }
 
-.container h2 {
-    color: #FFFFFF;
+.container h2 h4 {
+    width: 50%;
+    color: green;
 }
 
 .container {
     padding: 20px;
 }
 
-@keyframes hello2 {
+.container h2 {
+    color: #FFFFFF;
+}
+
+@keyframes hello {
+    10% {
+        color: blue;
+        opacity: 1;
+    }
+
     100% {
         color: orange;
     }
@@ -24,21 +29,11 @@ h4 {
     0% {
         color: red;
         opacity: 0;
-    }
-
-    10% {
-        color: blue;
-        opacity: 1;
     }
 
 }
 
-@keyframes hello {
-    0% {
-        color: red;
-        opacity: 0;
-    }
-
+@keyframes hello2 {
     10% {
         color: blue;
         opacity: 1;
@@ -46,6 +41,11 @@ h4 {
 
     100% {
         color: orange;
+    }
+
+    0% {
+        color: red;
+        opacity: 0;
     }
 
 }
