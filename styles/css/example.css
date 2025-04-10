@@ -9,6 +9,7 @@
 h4 {
     width: 50%;
     color: green;
+    animation: "3s hello";
 }
 
 .container h2 h4 {
@@ -17,13 +18,13 @@ h4 {
 }
 
 @keyframes hello {
-    100% {
-        color: orange;
-    }
-
     0% {
         color: red;
         opacity: 0;
+    }
+
+    100% {
+        color: orange;
     }
 
     10% {

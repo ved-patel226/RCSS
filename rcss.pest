@@ -1,7 +1,7 @@
 // Add this in the CSS section, near the beginning
-rcss = _{ SOI ~ (WHITE_SPACE* ~ (at_methods | import_statement | function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
+rcss = _{ SOI ~ (WHITE_SPACE* ~ (at_methods_oneliner | import_statement | function_definition | variable_declaration | rule) ~ WHITE_SPACE*)* ~ EOI }
 
-at_methods = { 
+at_methods_oneliner = { 
     WHITE_SPACE* ~ "@" ~ (
         "import" ~ WHITE_SPACE+ ~ "url" ~ "(" ~ string_literal ~ ")" ~ WHITE_SPACE* ~ ";" |
         "charset" ~ WHITE_SPACE+ ~ string_literal ~ WHITE_SPACE* ~ ";" |
