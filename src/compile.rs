@@ -97,7 +97,13 @@ pub fn compile(
             }
 
             Rule::keyframes_rule => {
-                at_methods = keyframes::process_keyframes_definition(at_methods, pair);
+                at_methods = keyframes::process_keyframes_definition(
+                    at_methods,
+                    pair,
+                    &meta_data,
+                    &raw_rcss,
+                    input_path
+                )?;
             }
 
             Rule::rule_comment => {}

@@ -1,8 +1,3 @@
-h4 {
-    width: 50%;
-    color: green;
-}
-
 .container h2 {
     color: #FFFFFF;
 }
@@ -11,17 +6,17 @@ h4 {
     padding: 20px;
 }
 
+h4 {
+    width: 50%;
+    color: green;
+}
+
 .container h2 h4 {
     width: 50%;
     color: green;
 }
 
 @keyframes hello {
-    10% {
-        color: blue;
-        opacity: 1;
-    }
-
     100% {
         color: orange;
     }
@@ -31,21 +26,9 @@ h4 {
         opacity: 0;
     }
 
-}
-
-@keyframes hello2 {
     10% {
-        color: blue;
+        color: #FFFFFF;
         opacity: 1;
-    }
-
-    0% {
-        color: red;
-        opacity: 0;
-    }
-
-    100% {
-        color: orange;
     }
 
 }
