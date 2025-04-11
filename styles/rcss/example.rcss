@@ -4,11 +4,10 @@ let variable: "#FFFFFF";
 let breakpoint: "768px";
 
 fn padding() {
-  padding: 20px;
+  padding: &breakpoint;
 }
 
-@import url("styles.css");
-@charset "UTF-8";
+
 
 .container {
     padding();

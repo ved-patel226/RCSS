@@ -81,7 +81,12 @@ pub fn compile(
             }
 
             Rule::function_definition => {
-                meta_data = functions::process_function_definition(meta_data, pair);
+                meta_data = functions::process_function_definition(
+                    meta_data,
+                    pair,
+                    &raw_rcss,
+                    &input_path
+                )?;
             }
 
             Rule::rule_normal => {

@@ -1,6 +1,7 @@
 // RCSS Project File Imports
 mod compile;
 mod error;
+mod common;
 
 pub mod process_x {
     pub mod variables;
