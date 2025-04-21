@@ -166,10 +166,6 @@ This command will compile `.rcss` files in `styles/rcss` into standard CSS files
 - Add RCSS formatter
 - Improve output css format
 
-### 🔮 Phase 3: Future Plans
-
-- WASM support.
-
 ---
 
 **Base logo** by [Dzuk](https://github.com/dzuk-mutant), licensed under [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/). [Download the emoji set](https://rustacean.net/fan-art.html#fanart)
