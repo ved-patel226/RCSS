@@ -74,12 +74,14 @@ pub fn compile(
                     continue;
                 }
 
-                imports::process_import_statement(
+                meta_data = imports::process_import_statement(
                     &mut meta_data,
                     project_meta_data,
+                    &raw_rcss,
+                    input_path,
                     relative_path,
                     pair
-                );
+                )?;
             }
 
             Rule::variable_declaration => {

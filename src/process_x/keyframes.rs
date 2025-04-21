@@ -6,7 +6,7 @@ pub fn process_keyframes_definition(
     mut at_methods: HashMap<String, HashMap<String, Vec<String>>>,
     pair: Pair<Rule>,
     meta_data: &[MetaData],
-    raw_scss: &str,
+    raw_rcss: &str,
     input_path: &str
 ) -> Result<HashMap<String, HashMap<String, Vec<String>>>, RCSSError> {
     let inner_pairs = pair.into_inner();
@@ -72,7 +72,7 @@ pub fn process_keyframes_definition(
                                         let position = ksb_in_pair.line_col();
                                         let line = position.0;
                                         let column = position.1;
-                                        let context = get_error_context(raw_scss, line, 2);
+                                        let context = get_error_context(raw_rcss, line, 2);
 
                                         let err = RCSSError::VariableError {
                                             file_path: input_path.into(),

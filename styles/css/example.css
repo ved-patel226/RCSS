@@ -1,3 +1,8 @@
+.container {
+    padding: 10px;
+    color: red;
+}
+
 .container h2 {
     color: red;
 }
@@ -13,12 +18,11 @@ h4 {
     color: green;
 }
 
-.container {
-    padding: 10px;
-    color: red;
-}
-
 @keyframes hello {
+    100% {
+        color: orange;
+    }
+
     0% {
         color: red;
         opacity: 0;
@@ -27,10 +31,6 @@ h4 {
     10% {
         color: blue;
         opacity: 1;
-    }
-
-    100% {
-        color: orange;
     }
 
 }

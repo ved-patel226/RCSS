@@ -1,7 +1,6 @@
 use common::variables::*;
 
 
-
 .container {
     padding();
     color: red;

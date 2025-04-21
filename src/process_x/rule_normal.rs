@@ -11,7 +11,7 @@ pub fn process_rule_normal(
     mut meta_data: Vec<MetaData>,
     mut declarations: HashMap<String, Vec<String>>,
     pair: Pair<Rule>,
-    raw_scss: &str,
+    raw_rcss: &str,
     input_path: &str
 ) -> Result<(Vec<MetaData>, HashMap<String, Vec<String>>)> {
     let inner_pairs = pair.into_inner();
@@ -73,7 +73,7 @@ pub fn process_rule_normal(
                         let position = in_pair.line_col();
                         let line = position.0;
                         let column = position.1;
-                        let context = get_error_context(raw_scss, line, 2);
+                        let context = get_error_context(raw_rcss, line, 2);
 
                         let err = RCSSError::VariableError {
                             file_path: input_path.into(),
@@ -127,7 +127,7 @@ pub fn process_rule_normal(
                     let position = in_pair.line_col();
                     let line = position.0;
                     let column = position.1;
-                    let context = get_error_context(raw_scss, line, 2);
+                    let context = get_error_context(raw_rcss, line, 2);
 
                     let err = RCSSError::FunctionError {
                         file_path: input_path.to_string().into(),

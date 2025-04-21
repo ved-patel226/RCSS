@@ -8,7 +8,7 @@ use crate::{
 pub fn process_function_definition(
     mut meta_data: Vec<MetaData>,
     pair: Pair<Rule>,
-    raw_scss: &str,
+    raw_rcss: &str,
     input_path: &str,
     initial_compile: bool
 ) -> Result<Vec<MetaData>, RCSSError> {
@@ -65,7 +65,7 @@ pub fn process_function_definition(
                                     let position = func_in_pair.line_col();
                                     let line = position.0;
                                     let column = position.1;
-                                    let context = get_error_context(raw_scss, line, 2);
+                                    let context = get_error_context(raw_rcss, line, 2);
 
                                     let err = RCSSError::VariableError {
                                         file_path: input_path.into(),

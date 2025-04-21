@@ -21,8 +21,10 @@ pub enum RCSSError {
     ConfigError(String),
     ImportError {
         file_path: PathBuf,
-        import_path: String,
+        line: usize,
+        column: usize,
         message: String,
+        context: String,
     },
     VariableError {
         file_path: PathBuf,
@@ -61,14 +63,8 @@ impl fmt::Display for RCSSError {
                 write!(f, "Compilation Error in {} - {}", file_path.display(), message)
             }
             RCSSError::ConfigError(message) => { write!(f, "Configuration Error: {}", message) }
-            RCSSError::ImportError { file_path, import_path, message } => {
-                write!(
-                    f,
-                    "Import Error in {} importing '{}' - {}",
-                    file_path.display(),
-                    import_path,
-                    message
-                )
+            RCSSError::ImportError { file_path, message, line: _, column: _, context: _ } => {
+                write!(f, "Import Error in {}. {}", file_path.display(), message)
             }
             RCSSError::VariableError {
                 file_path,
@@ -220,21 +216,8 @@ pub fn display_error(error: &RCSSError) {
             println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
         }
 
-        RCSSError::ImportError { file_path, import_path, message } => {
-            let location = format!("{} --> {}:{}", file_path.display(), "line", "column");
-
-            println!("{}", "╭─────────────────────────────────────────────────────".bright_red());
-            println!("{}", "│".bright_red());
-            println!("{} {}", "│".bright_red(), location.red().bold());
-            println!("{} {}", "│".bright_red(), file_path.display().to_string().blue());
-            println!("{}", "│".bright_red());
-            println!("{} {}", "│".bright_red(), " Import Path ".red().bold());
-            println!("{} {}", "│".bright_red(), import_path);
-            println!("{}", "│".bright_red());
-            println!("{} {}", "│".bright_red(), " Message ".red().bold());
-            println!("{} {}", "│".bright_red(), message);
-            println!("{}", "│".bright_red());
-            println!("{}", "╰─────────────────────────────────────────────────────".bright_red());
+        RCSSError::ImportError { file_path, message, line, column, context } => {
+            display_error_with_context(file_path, *line, *column, &message, context);
         }
 
         RCSSError::VariableError {
