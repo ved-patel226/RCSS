@@ -1,19 +1,14 @@
 use common::variables::*;
 
-let variable: "#FFFFFF";
-let breakpoint: "768px";
-
-fn padding() {
-  padding: &breakpoint;
-}
-
+let variable: "5";
 
 
 .container {
     padding();
+    color: red;
 
     h2 {
-        color: &variable;
+        color: &color;
 
         h4 {
             width: 50%;

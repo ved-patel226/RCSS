@@ -1,13 +1,13 @@
 // RCSS Project File Imports
 mod compile;
 mod error;
-mod common;
 
 pub mod process_x {
     pub mod variables;
     pub mod rule_normal;
     pub mod functions;
     pub mod keyframes;
+    pub mod imports;
 }
 
 use process_x::{ variables, rule_normal, functions, keyframes };
@@ -108,13 +108,11 @@ fn main() -> Result<()> {
     }
 
     if initial_compile_errors > 0 {
-        println!(
-            "Stopping execution due to initial compilation errors. Fix above before continuing.."
-        );
+        println!("Stopping execution due to initial errors. Fix above before continuing..");
         std::process::exit(1);
     } else {
         println!(
-            "Initial Compilation successful. Watching {} for changes...",
+            "Initial check successful. Watching {} for changes...",
             &rcss_input_path.display()
         );
     }

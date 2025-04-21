@@ -16,7 +16,4 @@ fn padding() {
         color: red;
         padding();
     }
-
-    padding();
-
 }

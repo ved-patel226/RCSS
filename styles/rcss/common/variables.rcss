@@ -1,0 +1,6 @@
+let color: "red";
+let breakpoint: "768px";
+
+fn padding() {
+  padding: &breakpoint;
+}

@@ -67,7 +67,7 @@ pub fn compile(
     for pair in pairs {
         match pair.as_rule() {
             Rule::import_statement => {
-                // we don't want to import anything on initial compile
+                // we don't want to import anything on initial "compile"
                 // we just want to fill project_meta_data
                 if initial_compile {
                     continue;
@@ -90,6 +90,12 @@ pub fn compile(
             }
 
             Rule::rule_normal => {
+                // we don't want to import anything on initial "compile"
+                // we just want to fill project_meta_data
+                if initial_compile {
+                    continue;
+                }
+
                 let (new_meta_data, new_declarations) = rule_normal::process_rule_normal(
                     meta_data.clone(),
                     declarations,
@@ -123,13 +129,29 @@ pub fn compile(
 
     project_meta_data.insert(input_path.to_string(), meta_data.clone());
 
-    let css_output = css_map_to_string(&declarations, &at_methods);
-    fs::write(output_path, css_output)?;
-
     let now = Local::now();
     let formatted_time = now.format("%I:%M:%S %p");
 
     let elapsed_time = start_time.elapsed();
+
+    if initial_compile {
+        println!(
+            "{} {} {}",
+            format!("CSS checked at {}", input_path).green(),
+            format!("in {:.2?}", elapsed_time).truecolor(128, 128, 128),
+            format!("@ {}", formatted_time).truecolor(128, 128, 128)
+        );
+
+        return Ok(project_meta_data.clone());
+    }
+
+    let css_output = css_map_to_string(&declarations, &at_methods);
+
+    // Create folders
+    if let Some(parent) = std::path::Path::new(output_path).parent() {
+        fs::create_dir_all(parent)?;
+    }
+    fs::write(output_path, css_output)?;
 
     println!(
         "{} {} {}",
