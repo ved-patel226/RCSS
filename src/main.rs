@@ -10,7 +10,7 @@ pub mod process_x {
     pub mod imports;
 }
 
-use process_x::{ variables, rule_normal, functions, keyframes };
+use process_x::{ variables, rule_normal, functions, keyframes, imports };
 
 use error::Result;
 
@@ -18,6 +18,10 @@ use clap::{ Arg, Command };
 use compile::compile;
 use std::path::Path;
 use std::collections::HashMap;
+
+use notify::event::{ AccessKind, AccessMode };
+use notify::{ recommended_watcher, Event, RecursiveMode, Watcher, EventKind };
+use std::sync::mpsc;
 
 #[derive(Debug, Clone)]
 #[allow(unused)]
@@ -58,6 +62,7 @@ fn main() -> Result<()> {
 
     let rcss_input_path = current_path.join(input_path);
     let css_input_path = rcss_input_path.join("../css");
+
     if !css_input_path.exists() {
         std::fs::create_dir_all(&css_input_path)?;
     }
@@ -98,6 +103,7 @@ fn main() -> Result<()> {
             let Err(_) = compile(
                 rcss_input_path.join(rcss_file).to_str().unwrap(),
                 css_input_path.join(rcss_file).with_extension("css").to_str().unwrap(),
+                rcss_input_path.to_str().unwrap(),
                 &mut project_meta_data,
                 verbose,
                 true
@@ -115,6 +121,47 @@ fn main() -> Result<()> {
             "Initial check successful. Watching {} for changes...",
             &rcss_input_path.display()
         );
+    }
+
+    let (tx, rx) = mpsc::channel::<notify::Result<Event>>();
+
+    let mut watcher = recommended_watcher(tx).map_err(|e|
+        std::io::Error::new(std::io::ErrorKind::Other, e)
+    )?;
+
+    // Add a path to be watched. All files and directories at that path and
+    // below will be monitored for changes.
+    watcher
+        .watch(Path::new(input_path), RecursiveMode::Recursive)
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+
+    for res in rx {
+        match res {
+            Ok(path) => {
+                // if file is written to
+                if let EventKind::Access(AccessKind::Close(AccessMode::Write)) = path.kind {
+                    if path.paths[0].extension().and_then(|s| s.to_str()) == Some("rcss") {
+                        let rcss_file = path.paths[0].strip_prefix(&rcss_input_path).unwrap();
+
+                        let rcss_combined_path = rcss_input_path.join(rcss_file);
+                        let css_combined_path = css_input_path
+                            .join(rcss_file)
+                            .with_extension("css");
+
+                        let _ = compile(
+                            rcss_combined_path.to_str().unwrap(),
+                            css_combined_path.to_str().unwrap(),
+                            rcss_input_path.to_str().unwrap(),
+                            &mut project_meta_data,
+                            verbose,
+                            false
+                        );
+                    }
+                }
+            }
+
+            Err(e) => println!("watch error: {:?}", e),
+        }
     }
 
     Ok(())

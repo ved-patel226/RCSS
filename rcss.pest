@@ -14,7 +14,7 @@ at_methods_oneliner = {
 // IMPORTS
 //
 import_statement = { WHITE_SPACE* ~ "use" ~ WHITE_SPACE+ ~ import_path ~ end_seperater ~ WHITE_SPACE* }
-import_path = { (identifier ~ "::" )* ~ ( identifier | "*" ) }
+import_path = _{ (identifier ~ "::" )* ~ ( identifier | "*" ) }
 
 //
 // RULES

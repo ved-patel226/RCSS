@@ -1,14 +1,11 @@
 use common::variables::*;
 
-let variable: "5";
-
-
 .container {
     padding();
     color: red;
 
     h2 {
-        color: &color;
+        color: &primary_color;
 
         h4 {
             width: 50%;
@@ -30,7 +27,7 @@ h4 {
     }
 
     10% {
-        color: &variable;
+        color: &secondary_color;
         opacity: 1;
     }
 

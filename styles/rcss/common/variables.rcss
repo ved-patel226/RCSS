@@ -1,6 +1,6 @@
-let color: "red";
-let breakpoint: "768px";
+let primary_color: "red";
+let secondary_color: "blue";
 
 fn padding() {
-  padding: &breakpoint;
+  padding: 10px;
 }

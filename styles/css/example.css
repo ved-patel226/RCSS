@@ -1,16 +1,36 @@
-@keyframes hello {
-    100% {
-        color: orange;
-    }
+.container h2 {
+    color: red;
+}
 
+.container {
+    padding: 10px;
+    color: red;
+}
+
+.container h2 h4 {
+    width: 50%;
+    color: green;
+}
+
+h4 {
+    width: 50%;
+    color: green;
+    animation: 3s hello;
+}
+
+@keyframes hello {
     0% {
         color: red;
         opacity: 0;
     }
 
     10% {
-        color: 5;
+        color: blue;
         opacity: 1;
+    }
+
+    100% {
+        color: orange;
     }
 
 }

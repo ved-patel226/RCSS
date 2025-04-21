@@ -8,11 +8,30 @@ use crate::{
 use std::collections::HashMap;
 
 pub fn process_import_statement(
-    mut meta_data: Vec<MetaData>,
-    mut project_meta_data: HashMap<String, Vec<MetaData>>,
+    meta_data: &mut Vec<MetaData>,
+    project_meta_data: &mut HashMap<String, Vec<MetaData>>,
+    relative_path: &str,
     pair: Pair<Rule>
 ) -> Vec<MetaData> {
-    print_rule(pair);
+    let inner_pairs = pair.into_inner();
+    let mut target_import_file: Vec<String> = Vec::new();
 
-    meta_data
+    for import_in_pair in inner_pairs {
+        match import_in_pair.as_rule() {
+            Rule::identifier => {
+                target_import_file.push(import_in_pair.as_str().to_string());
+            }
+
+            _ => {}
+        }
+    }
+
+    //TODO - redo this better.. it sucks rn
+    let full_path = format!("{}/{}", relative_path, target_import_file.join("/")) + ".rcss";
+
+    if let Some(imported_meta_data) = project_meta_data.get(&full_path) {
+        meta_data.extend(imported_meta_data.clone());
+    }
+
+    meta_data.clone()
 }

@@ -8,7 +8,7 @@ use chrono::Local;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
-use crate::{ rule_normal, variables, functions, keyframes, MetaData };
+use crate::{ rule_normal, variables, functions, keyframes, imports, MetaData };
 
 #[derive(Parser)]
 #[grammar = "rcss.pest"]
@@ -22,6 +22,7 @@ pub fn print_rule(pair: pest::iterators::Pair<Rule>) {
 pub fn compile(
     input_path: &str,
     output_path: &str,
+    relative_path: &str,
     project_meta_data: &mut HashMap<String, Vec<MetaData>>,
     verbose: bool,
     initial_compile: bool
@@ -67,13 +68,18 @@ pub fn compile(
     for pair in pairs {
         match pair.as_rule() {
             Rule::import_statement => {
-                // we don't want to import anything on initial "compile"
+                // we don't want to import anything on initial check
                 // we just want to fill project_meta_data
                 if initial_compile {
                     continue;
                 }
 
-                print_rule(pair);
+                imports::process_import_statement(
+                    &mut meta_data,
+                    project_meta_data,
+                    relative_path,
+                    pair
+                );
             }
 
             Rule::variable_declaration => {
@@ -90,7 +96,7 @@ pub fn compile(
             }
 
             Rule::rule_normal => {
-                // we don't want to import anything on initial "compile"
+                // we don't want to import anything on initial check
                 // we just want to fill project_meta_data
                 if initial_compile {
                     continue;
