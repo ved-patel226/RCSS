@@ -1,6 +1,6 @@
 use pest::iterators::Pair;
 use crate::{
-    compile::{ print_rule, Rule },
+    compile::Rule,
     error::{ display_error, RCSSError, get_error_context },
     MetaData,
     Result,

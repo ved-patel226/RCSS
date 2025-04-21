@@ -12,6 +12,8 @@ pub fn process_function_definition(
     input_path: &str,
     initial_compile: bool
 ) -> Result<Vec<MetaData>, RCSSError> {
+    let _ = initial_compile;
+
     let inner_pairs = pair.into_inner();
 
     let mut name = String::new();

@@ -135,16 +135,12 @@ fn main() -> Result<()> {
         .watch(Path::new(input_path), RecursiveMode::Recursive)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
 
-    let mut dynamic_err_count = 0;
-
     for res in rx {
         match res {
             Ok(path) => {
                 // if file is written to
                 if let EventKind::Access(AccessKind::Close(AccessMode::Write)) = path.kind {
                     if path.paths[0].extension().and_then(|s| s.to_str()) == Some("rcss") {
-                        dynamic_err_count = 0;
-
                         let rcss_file = path.paths[0].strip_prefix(&rcss_input_path).unwrap();
 
                         let rcss_combined_path = rcss_input_path.join(rcss_file);
