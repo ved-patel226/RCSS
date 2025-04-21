@@ -18,7 +18,6 @@
   </div>
 </div>
 
-
 ---
 
 <p align="center">
@@ -88,8 +87,6 @@ Then, install:
 cargo install rcss-css
 ```
 
-
-
 > [!WARNING]
 > If you encounter the following warning:
 >
@@ -127,8 +124,6 @@ cargo install rcss-css
 >
 > Restart your terminal or command prompt to ensure the updated PATH is recognized.
 
-
-
 ---
 
 <div id="toc">
@@ -163,14 +158,13 @@ This command will compile `.rcss` files in `styles/rcss` into standard CSS files
 - Support variables and nesting.
 - Support functions with no arguments
 - Develop a VS Code extension with syntax highlighting.
+- Implement importing
 
 ### 🚧 Phase 2: Enhancements (Upcoming)
 
 - Support functions with arguments
-- Implement importing
 - Add RCSS formatter
 - Improve output css format
-- Improve error handling and debugging tools.
 
 ### 🔮 Phase 3: Future Plans
 
