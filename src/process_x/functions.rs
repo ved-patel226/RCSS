@@ -9,7 +9,8 @@ pub fn process_function_definition(
     mut meta_data: Vec<MetaData>,
     pair: Pair<Rule>,
     raw_scss: &str,
-    input_path: &str
+    input_path: &str,
+    initial_compile: bool
 ) -> Result<Vec<MetaData>, RCSSError> {
     let inner_pairs = pair.into_inner();
 

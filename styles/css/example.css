@@ -2,9 +2,10 @@
     color: red;
 }
 
-.container {
-    padding: 10px;
-    color: red;
+h4 {
+    width: 50%;
+    color: green;
+    animation: 3s hello;
 }
 
 .container h2 h4 {
@@ -12,10 +13,9 @@
     color: green;
 }
 
-h4 {
-    width: 50%;
-    color: green;
-    animation: 3s hello;
+.container {
+    padding: 10px;
+    color: red;
 }
 
 @keyframes hello {

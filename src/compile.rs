@@ -91,7 +91,8 @@ pub fn compile(
                     meta_data,
                     pair,
                     &raw_rcss,
-                    &input_path
+                    &input_path,
+                    initial_compile
                 )?;
             }
 
@@ -114,6 +115,10 @@ pub fn compile(
             }
 
             Rule::keyframes_rule => {
+                if initial_compile {
+                    continue;
+                }
+
                 at_methods = keyframes::process_keyframes_definition(
                     at_methods,
                     pair,
