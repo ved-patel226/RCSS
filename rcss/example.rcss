@@ -1,0 +1,19 @@
+use rcss::common::variables::*;
+
+let var: "5";
+
+fn padding() {
+    padding: 20px;
+    color: red;
+}
+
+.container {
+    color: blue;
+    filter: blur(10px);
+
+
+    h2 {
+        color: red;
+        padding();
+    }
+}

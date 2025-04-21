@@ -1,29 +1,38 @@
-use rcss::common::variables::*;
+use common::variables::*;
+
 
 .container {
     padding();
+    color: red;
 
     h2 {
-        color: red;
+        color: &primary_color;
+
+        h4 {
+            width: 50%;
+            color: green;
+        }
     }
 }
 
 h4 {
     width: 50%;
     color: green;
+    animation: 3s hello;
 }
 
+@keyframes hello {
+    0% {
+        color: red;
+        opacity: 0;
+    }
 
-/* MOBILE STYLES */
+    10% {
+        color: &secondary_color;
+        opacity: 1;
+    }
 
-@media screen and (max-width: &breakpoint) {
-  .container {
-      width: 100%;
-  }
-
-  h4 {
-      width: 100%;
-  }
+    100% {
+        color: orange;
+    }
 }
-
-/* 572.40µs */

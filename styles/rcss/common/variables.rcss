@@ -1,8 +1,6 @@
-use common::bother::other::*;
-
-let breakpoint: "red";
+let primary_color: "red";
+let secondary_color: "blue";
 
 fn padding() {
-  padding: 20px;
-  color: red;
+  padding: 10px;
 }

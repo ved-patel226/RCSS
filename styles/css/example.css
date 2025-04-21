@@ -1,16 +1,36 @@
 .container {
-    padding: 20px;
+    padding: 10px;
     color: red;
-}.container h2 {
+}
+
+.container h2 {
     color: red;
-}h4 {
+}
+
+h4 {
     width: 50%;
     color: green;
-}@media screen and (max-width: red){
-    .container {
-        width: 100%;
+    animation: 3s hello;
+}
+
+.container h2 h4 {
+    width: 50%;
+    color: green;
+}
+
+@keyframes hello {
+    100% {
+        color: orange;
     }
-    h4 {
-        width: 100%;
+
+    0% {
+        color: red;
+        opacity: 0;
     }
+
+    10% {
+        color: blue;
+        opacity: 1;
+    }
+
 }
