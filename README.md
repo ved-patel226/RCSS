@@ -32,14 +32,18 @@
 **Rusty Cascading Style Sheets (RCSS)** is a styling language that brings Rust-inspired syntax to CSS. It combines the robustness of Rust with SASS-like features such as nesting and variables for cleaner, more maintainable styles.
 
 ```rcss
+/* common/variables.rcss:
 let primary_color: "#FFFFFF";
 let secondary_color: "black";
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
 fn padding() {
-  padding: 20px;
+    padding: 10px;
 }
+*/
+
+use common::variables::*;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 .container {
     width: 50%;

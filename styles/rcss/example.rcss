@@ -3,7 +3,7 @@ let primary_color: "#FFFFFF";
 let secondary_color: "black";
 
 fn padding() {
-    padding: 20px;
+    padding: 10px;
 }
 */
 
