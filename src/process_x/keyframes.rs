@@ -3,7 +3,7 @@ use crate::{ compile::Rule, MetaData, error::{ RCSSError, get_error_context, dis
 use std::collections::HashMap;
 
 pub fn process_keyframes_definition(
-    mut at_methods: HashMap<String, HashMap<String, Vec<String>>>,
+    mut keyframes: HashMap<String, HashMap<String, Vec<String>>>,
     pair: Pair<Rule>,
     meta_data: &[MetaData],
     raw_rcss: &str,
@@ -113,6 +113,6 @@ pub fn process_keyframes_definition(
         }
     }
 
-    at_methods.insert(format!("@keyframes {}", name), selector_to_declarations);
-    Ok(at_methods)
+    keyframes.insert(format!("@keyframes {}", name), selector_to_declarations);
+    Ok(keyframes)
 }

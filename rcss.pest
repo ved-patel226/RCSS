@@ -88,7 +88,7 @@ del_val_length      = { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? ~ length_type }
 // VARIABLES
 //
 variable_declaration = { WHITE_SPACE* ~ "let" ~ WHITE_SPACE+ ~ variable_name ~ property_separater ~ WHITE_SPACE* ~ string_literal ~ end_seperater ~ WHITE_SPACE* }
-string_literal      = { "\"" ~ ( !"\"" ~ ANY )* ~ "\"" }
+string_literal      = { ("\"" ~ ( !"\"" ~ ANY )* ~ "\"") | ("'" ~ ( !"'" ~ ANY )* ~ "'") }
 variable_name       = @{ ASCII_ALPHA ~ text_chars* }
 variable_reference  = { "&" ~ ASCII_ALPHA ~ text_chars* }
 

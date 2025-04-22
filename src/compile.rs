@@ -8,7 +8,7 @@ use chrono::Local;
 
 use crate::{ error::{ RCSSError, display_error }, Result };
 
-use crate::{ rule_normal, variables, functions, keyframes, imports, MetaData };
+use crate::{ rule_normal, variables, functions, keyframes, imports, media_queries, MetaData };
 
 #[derive(Parser)]
 #[grammar = "rcss.pest"]
@@ -63,7 +63,9 @@ pub fn compile(
     let mut css_output = String::new();
     let mut meta_data: Vec<MetaData> = Vec::new();
     let mut declarations: HashMap<String, Vec<String>> = HashMap::new();
-    let mut at_methods: HashMap<String, HashMap<String, Vec<String>>> = HashMap::new();
+    let mut keyframes: HashMap<String, HashMap<String, Vec<String>>> = HashMap::new();
+    let mut one_liners: Vec<String> = Vec::new();
+    let mut media_queries: HashMap<String, HashMap<String, Vec<String>>> = HashMap::new();
 
     for pair in pairs {
         match pair.as_rule() {
@@ -105,15 +107,13 @@ pub fn compile(
                     continue;
                 }
 
-                let (new_meta_data, new_declarations) = rule_normal::process_rule_normal(
+                declarations = rule_normal::process_rule_normal(
                     meta_data.clone(),
                     declarations,
                     pair,
                     &raw_rcss,
                     &input_path
                 )?;
-                meta_data = new_meta_data;
-                declarations = new_declarations;
             }
 
             Rule::keyframes_rule => {
@@ -121,8 +121,8 @@ pub fn compile(
                     continue;
                 }
 
-                at_methods = keyframes::process_keyframes_definition(
-                    at_methods,
+                keyframes = keyframes::process_keyframes_definition(
+                    keyframes,
                     pair,
                     &meta_data,
                     &raw_rcss,
@@ -133,6 +133,20 @@ pub fn compile(
             Rule::rule_comment => {}
 
             Rule::EOI => {}
+
+            Rule::at_methods_oneliner => {
+                one_liners.push(pair.as_str().trim().to_string());
+            }
+
+            Rule::media_query => {
+                media_queries = media_queries::process_media_query(
+                    media_queries,
+                    pair,
+                    &meta_data,
+                    &raw_rcss,
+                    input_path
+                )?;
+            }
 
             _ => {
                 println!("{:?} -> {}", pair.as_rule(), pair.as_str());
@@ -158,7 +172,7 @@ pub fn compile(
         return Ok(project_meta_data.clone());
     }
 
-    let css_output = css_map_to_string(&declarations, &at_methods);
+    let css_output = css_map_to_string(&declarations, &keyframes, &one_liners, &media_queries);
 
     // Create folders
     if let Some(parent) = std::path::Path::new(output_path).parent() {
@@ -178,20 +192,35 @@ pub fn compile(
 
 fn css_map_to_string(
     css_map: &HashMap<String, Vec<String>>,
-    at_methods: &HashMap<String, HashMap<String, Vec<String>>>
+    keyframes: &HashMap<String, HashMap<String, Vec<String>>>,
+    one_liners: &Vec<String>,
+    media_queries: &HashMap<String, HashMap<String, Vec<String>>>
 ) -> String {
     let mut css_string = String::new();
 
     // Process regular CSS rules
-    for (selector, properties) in css_map {
-        // Start building the CSS rule
+    let mut sorted_css_map: Vec<_> = css_map.iter().collect();
+    sorted_css_map.sort_by_key(|(selector, _)| *selector);
+
+    for one_liner in one_liners {
+        css_string.push_str(one_liner);
+        css_string.push_str("\n");
+    }
+
+    if !one_liners.is_empty() {
+        css_string.push_str("\n");
+    }
+
+    for (selector, properties) in sorted_css_map {
         css_string.push_str(selector);
         css_string.push_str(" {\n");
 
-        // Add each unique property
-        for property in properties {
+        let mut sorted_properties = properties.clone();
+        sorted_properties.sort();
+
+        for property in sorted_properties {
             css_string.push_str("    ");
-            css_string.push_str(property);
+            css_string.push_str(&property);
             css_string.push('\n');
         }
 
@@ -199,20 +228,27 @@ fn css_map_to_string(
     }
 
     // Process at-methods like @keyframes
-    for (at_rule, keyframes) in at_methods {
+    let mut keyframes: Vec<_> = keyframes.iter().collect();
+    keyframes.sort_by_key(|(at_rule, _)| *at_rule);
+
+    for (at_rule, keyframes) in keyframes {
         css_string.push_str(at_rule);
         css_string.push_str(" {\n");
 
-        // Process each keyframe
-        for (keyframe_selector, properties) in keyframes {
+        let mut sorted_keyframes: Vec<_> = keyframes.iter().collect();
+        sorted_keyframes.sort_by_key(|(keyframe_selector, _)| *keyframe_selector);
+
+        for (keyframe_selector, properties) in sorted_keyframes {
             css_string.push_str("    ");
             css_string.push_str(keyframe_selector);
             css_string.push_str(" {\n");
 
-            // Add each property for this keyframe
-            for property in properties {
+            let mut sorted_properties = properties.clone();
+            sorted_properties.sort();
+
+            for property in sorted_properties {
                 css_string.push_str("        ");
-                css_string.push_str(property);
+                css_string.push_str(&property);
                 css_string.push('\n');
             }
 
@@ -222,12 +258,22 @@ fn css_map_to_string(
         css_string.push_str("}\n\n");
     }
 
-    // Remove the last newline if the string is not empty
-    if !css_string.is_empty() {
-        css_string.pop();
-        if !css_string.is_empty() {
-            css_string.pop();
+    for (condition, property_value) in media_queries {
+        css_string.push_str(&format!("{} {{\n", condition.trim()));
+
+        for (property, values) in property_value {
+            css_string.push_str(&format!("    {} {{\n", property.trim()));
+
+            for value in values {
+                css_string.push_str("        ");
+                css_string.push_str(&value);
+                css_string.push_str("\n");
+            }
+
+            css_string.push_str("    }\n");
         }
+
+        css_string.push_str("}\n");
     }
 
     css_string

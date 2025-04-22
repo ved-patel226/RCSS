@@ -8,12 +8,12 @@ use crate::{
 use std::collections::HashMap;
 
 pub fn process_rule_normal(
-    mut meta_data: Vec<MetaData>,
+    meta_data: Vec<MetaData>,
     mut declarations: HashMap<String, Vec<String>>,
     pair: Pair<Rule>,
     raw_rcss: &str,
     input_path: &str
-) -> Result<(Vec<MetaData>, HashMap<String, Vec<String>>)> {
+) -> Result<HashMap<String, Vec<String>>> {
     let inner_pairs = pair.into_inner();
     let mut current_selector: Vec<String> = Vec::new();
 
@@ -29,8 +29,6 @@ pub fn process_rule_normal(
                 } else {
                     in_pair.as_str().trim().trim_start_matches('&').trim().to_string()
                 };
-
-                println!("{}", selector);
 
                 current_selector.push(selector);
             }
@@ -136,7 +134,7 @@ pub fn process_rule_normal(
                     }
                 }
 
-                for data in &mut meta_data {
+                for data in &meta_data {
                     if let MetaData::Function { name, body } = data {
                         if func_name == *name {
                             func_declarations = body.clone();
@@ -181,5 +179,5 @@ pub fn process_rule_normal(
         }
     }
 
-    Ok((meta_data, declarations))
+    Ok(declarations)
 }

@@ -1,19 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 .container {
-    color: red;
+    padding: 20px;
+    width: 50%;
 }
 
-.container .other2 {
-    filter: blur(10px);
-}
-
-.container .other {
-    color: red;
-}
-
-.container .other2:hover {
-    color: green;
+.container h2 {
+    color: #FFFFFF;
 }
 
 .container:hover {
-    color: blue;
+    padding: 40px;
+}
+
+h4 {
+    width: 50%;
+}
+
+@media screen and (max-width: 480px) {
+    h4 {
+        width: 100%;
+        color: black;
+    }
+    .container {
+        width: 100%;
+    }
 }

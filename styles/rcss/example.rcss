@@ -1,18 +1,39 @@
+let primary_color: "#FFFFFF";
+let secondary_color: "black";
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+fn padding() {
+  padding: 20px;
+}
+
 .container {
-    color: red;
-
-    .other2{
-        filter: blur(10px);
-
-        &:hover {
-            color: green;
-        }
-    }
-
+    width: 50%;
+    padding();
 
     &:hover {
-        color: blue;
+        padding: 40px;
     }
 
-    .other{color: red;}
+    h2 {
+        color: &primary_color;
+    }
+}
+
+h4 {
+    width: 50%;
+}
+
+
+/* MOBILE STYLES */
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 100%;
+    }
+
+    h4 {
+        width: 100%;
+        color: &secondary_color;
+    }
 }

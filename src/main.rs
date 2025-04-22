@@ -8,9 +8,10 @@ pub mod process_x {
     pub mod functions;
     pub mod keyframes;
     pub mod imports;
+    pub mod media_queries;
 }
 
-use process_x::{ variables, rule_normal, functions, keyframes, imports };
+use process_x::{ variables, rule_normal, functions, keyframes, imports, media_queries };
 
 use error::Result;
 
