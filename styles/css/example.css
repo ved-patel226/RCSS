@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 .container {
-    padding: 20px;
+    padding: 10px;
     width: 50%;
 }
 
 .container h2 {
-    color: #FFFFFF;
+    color: red;
 }
 
 .container:hover {
@@ -20,7 +20,7 @@ h4 {
 @media screen and (max-width: 480px) {
     h4 {
         width: 100%;
-        color: black;
+        color: blue;
     }
     .container {
         width: 100%;

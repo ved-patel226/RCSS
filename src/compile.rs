@@ -139,6 +139,10 @@ pub fn compile(
             }
 
             Rule::media_query => {
+                if initial_compile {
+                    continue;
+                }
+
                 media_queries = media_queries::process_media_query(
                     media_queries,
                     pair,
@@ -162,13 +166,6 @@ pub fn compile(
     let elapsed_time = start_time.elapsed();
 
     if initial_compile {
-        println!(
-            "{} {} {}",
-            format!("CSS checked at {}", input_path).green(),
-            format!("in {:.2?}", elapsed_time).truecolor(128, 128, 128),
-            format!("@ {}", formatted_time).truecolor(128, 128, 128)
-        );
-
         return Ok(project_meta_data.clone());
     }
 
