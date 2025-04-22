@@ -1,36 +1,19 @@
 .container {
-    padding: 10px;
     color: red;
 }
 
-.container h2 {
+.container .other2 {
+    filter: blur(10px);
+}
+
+.container .other {
     color: red;
 }
 
-h4 {
-    width: 50%;
-    color: green;
-    animation: 3s hello;
-}
-
-.container h2 h4 {
-    width: 50%;
+.container .other2:hover {
     color: green;
 }
 
-@keyframes hello {
-    100% {
-        color: orange;
-    }
-
-    0% {
-        color: red;
-        opacity: 0;
-    }
-
-    10% {
-        color: blue;
-        opacity: 1;
-    }
-
+.container:hover {
+    color: blue;
 }
