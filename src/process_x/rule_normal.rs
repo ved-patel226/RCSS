@@ -20,7 +20,19 @@ pub fn process_rule_normal(
     for in_pair in inner_pairs {
         match in_pair.as_rule() {
             Rule::selector => {
-                current_selector.push(in_pair.as_str().trim().to_string());
+                // if not the pseduo thing
+                let selector = if
+                    !in_pair.as_str().trim().starts_with("&::") &&
+                    !in_pair.as_str().trim().starts_with("&:")
+                {
+                    in_pair.as_str().trim().to_string()
+                } else {
+                    in_pair.as_str().trim().trim_start_matches('&').trim().to_string()
+                };
+
+                println!("{}", selector);
+
+                current_selector.push(selector);
             }
 
             Rule::right_curly_brace => {
@@ -43,7 +55,16 @@ pub fn process_rule_normal(
                     }
                 }
 
-                let joined_selector = current_selector.join(" ");
+                let joined_selector = {
+                    let mut result = String::new();
+                    for (i, part) in current_selector.iter().enumerate() {
+                        if i > 0 && !(part.starts_with(':') || part.starts_with("::")) {
+                            result.push_str(" ");
+                        }
+                        result.push_str(part);
+                    }
+                    result
+                };
 
                 let key = joined_selector.trim();
                 let default_value = in_pair.as_str().trim().to_string();

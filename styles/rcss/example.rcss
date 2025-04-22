@@ -1,38 +1,18 @@
-use common::variables::*;
-
-
 .container {
-    padding();
     color: red;
 
-    h2 {
-        color: &primary_color;
+    .other2{
+        filter: blur(10px);
 
-        h4 {
-            width: 50%;
+        &:hover {
             color: green;
         }
     }
-}
 
-h4 {
-    width: 50%;
-    color: green;
-    animation: 3s hello;
-}
 
-@keyframes hello {
-    0% {
-        color: red;
-        opacity: 0;
+    &:hover {
+        color: blue;
     }
 
-    10% {
-        color: &secondary_color;
-        opacity: 1;
-    }
-
-    100% {
-        color: orange;
-    }
+    .other{color: red;}
 }

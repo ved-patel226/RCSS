@@ -61,14 +61,18 @@ sel_type        = _{ ASCII_ALPHA ~ text_chars* }
 
 sel_uni         = _{ "*" }
 
-// A single selector element (e.g., "div", ".class", "#id")
-sel_element     = _{ sel_id | sel_class | sel_uni | sel_type }
+// A single selector element (e.g., "div", ".class", "#id", "::before")
+sel_element     = _{ sel_id | sel_class | sel_uni | sel_type | pseudo_element | pseudo_element_reference }
 
 // A compound selector with no spaces (e.g., "div.class#id")
 sel_compound    = _{ sel_element+ }
 
 // The full selector with support for nesting through whitespace
 selector        = { WHITE_SPACE* ~ sel_compound ~ (WHITE_SPACE+ ~ sel_compound)* ~ WHITE_SPACE* }
+
+// Pseudo-elements (e.g., "::before", "::after")
+pseudo_element  = _{ ":" ~ ":"? ~ ASCII_ALPHA+ }
+pseudo_element_reference = _{ "&:" ~ ":"? ~ ASCII_ALPHA+ }
 
 //
 // DECLARATION
