@@ -1,10 +1,5 @@
 use pest::iterators::Pair;
-use crate::{
-    compile::{ print_rule, Rule },
-    error::{ display_error, get_error_context, RCSSError, Result },
-    process_x::rule_normal,
-    MetaData,
-};
+use crate::{ compile::Rule, error::Result, process_x::rule_normal, MetaData };
 use std::collections::HashMap;
 
 pub fn process_media_query(
