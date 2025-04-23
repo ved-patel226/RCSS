@@ -77,12 +77,12 @@ pseudo_element_reference = _{ "&:" ~ ":"? ~ ASCII_ALPHA+ }
 //
 // DECLARATION
 //
-del_property        = @{ ASCII_ALPHA ~ text_chars* }
+del_property        = @{ ANY ~ text_chars* }
 
 del_val_keyword     = @{ ASCII_ALPHA ~ text_chars* }
 del_val_color       = { prefix_id ~ (ASCII_ALPHA | ASCII_DIGIT)* }
 
-del_val_length      = { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? ~ length_type }
+del_val_length      = { "-"? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? ~ length_type }
 
 //
 // VARIABLES
