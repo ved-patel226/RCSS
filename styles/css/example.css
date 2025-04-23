@@ -1,4 +1,18 @@
-.class::before {
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
+
+.grain {
+    height: 100%;
+    left: 0;
+    pointer-event: none;
+    position: fixed;
+    top: 0;
+    transform: translateZ(0);
+    width: 100%;
+    z-index: 0;
+    z-index: 300;
+}
+
+.grain:before {
     -webkit-animation: noise 1s steps(2) infinite;
     animation: noise 1s steps(2) infinite;
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png");
@@ -13,15 +27,21 @@
     z-index: 9999;
 }
 
-.grain {
-    height: 100%;
-    left: 0;
-    pointer-event: none;
-    position: fixed;
-    top: 0;
-    transform: translateZ(0);
-    width: 100%;
-    z-index: 300;
+.main {
+    z-index: 1;
+}
+
+body {
+    background-color:rgb(60, 60, 60);
+    font-family: "Inter";
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 300;
+    height: 200vh;
+    margin: 0;
+    overflow-x: hidden;
+    padding: 0;
+    position: relative;
 }
 
 @keyframes noise {

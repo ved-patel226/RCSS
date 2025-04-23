@@ -107,7 +107,7 @@ user_created_function_call = { WHITE_SPACE* ~ function_name ~ WHITE_SPACE* ~ par
 
 // Function calls (ex: blur(10px))
 function_call = { 
-    (ASCII_ALPHA | ASCII_DIGIT)+ ~ "(" ~ 
+    (ASCII_ALPHA | ASCII_DIGIT | "-")+ ~ "(" ~ 
     (
         WHITE_SPACE* ~ 
         (
