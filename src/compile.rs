@@ -153,7 +153,7 @@ pub fn compile(
             }
 
             _ => {
-                println!("{:?} -> {}", pair.as_rule(), pair.as_str());
+                // println!("{:?} -> {}", pair.as_rule(), pair.as_str());
             }
         }
     }

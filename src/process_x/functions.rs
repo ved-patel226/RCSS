@@ -1,9 +1,5 @@
 use pest::iterators::Pair;
-use crate::{
-    compile::{ print_rule, Rule },
-    MetaData,
-    error::{ RCSSError, get_error_context, display_error },
-};
+use crate::{ compile::Rule, MetaData, error::{ RCSSError, get_error_context, display_error } };
 
 pub fn process_function_definition(
     mut meta_data: Vec<MetaData>,
@@ -98,9 +94,7 @@ pub fn process_function_definition(
 
             Rule::parameter_list => {}
 
-            _ => {
-                print_rule(in_pair);
-            }
+            _ => {}
         }
     }
 

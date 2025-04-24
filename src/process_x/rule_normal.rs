@@ -1,6 +1,6 @@
 use pest::iterators::Pair;
 use crate::{
-    compile::{ print_rule, Rule },
+    compile::Rule,
     error::{ display_error, RCSSError, get_error_context },
     MetaData,
     Result,
@@ -40,82 +40,51 @@ pub fn process_rule_normal(
             }
 
             Rule::declaration => {
-                let declaration_inner = in_pair.clone().into_inner();
-                let mut variable_reference = String::new();
+                // Extract "color" and "height" from the declaration
+                let mut decl_str = in_pair.as_str().trim().to_string();
+                // Split by ':' to get property and value
 
-                for dec_in_pair in declaration_inner {
-                    match dec_in_pair.as_rule() {
-                        Rule::variable_reference => {
-                            variable_reference = dec_in_pair.as_str().to_string();
+                let mut referenced_vars = Vec::new();
+
+                let mut decl_property = "";
+                let mut decl_value: String = "".to_string();
+
+                if let Some((property, value)) = decl_str.split_once(':') {
+                    decl_property = property.trim();
+                    decl_value = value.trim().to_string();
+
+                    for token in value.split_whitespace() {
+                        if token.starts_with("&") {
+                            let var = token
+                                .trim_start_matches('&')
+                                .trim_end_matches(|c| (c == ';' || c == ','));
+                            referenced_vars.push(var);
                         }
-
-                        _ => {}
                     }
                 }
 
-                let joined_selector = {
-                    let mut result = String::new();
-                    for (i, part) in current_selector.iter().enumerate() {
-                        if i > 0 && !(part.starts_with(':') || part.starts_with("::")) {
-                            result.push_str(" ");
+                // Collect all replacements to avoid borrowing issues
+                let mut replacements = Vec::new();
+                for data in &meta_data {
+                    if let MetaData::Variables { name, value: var_value } = data {
+                        if referenced_vars.contains(&name.as_str()) {
+                            replacements.push((format!("&{}", name), var_value.clone()));
+                            referenced_vars.retain(|v| v != name);
                         }
-                        result.push_str(part);
                     }
-                    result
-                };
+                }
 
+                for (pattern, replacement) in replacements {
+                    decl_str = decl_str.replace(&pattern, &replacement);
+                }
+
+                let joined_selector = current_selector.join(" ");
                 let key = joined_selector.trim();
-                let default_value = in_pair.as_str().trim().to_string();
 
-                if !variable_reference.is_empty() {
-                    let mut found_var = false;
-
-                    for md in &meta_data {
-                        if let MetaData::Variables { name, value } = md {
-                            if name == variable_reference.trim_start_matches('&') {
-                                found_var = true;
-
-                                let replaced_value = default_value.replace(
-                                    &variable_reference,
-                                    value
-                                );
-                                if let Some(values) = declarations.get_mut(key) {
-                                    values.push(replaced_value);
-                                } else {
-                                    declarations.insert(key.to_string(), vec![replaced_value]);
-                                }
-                            }
-                        }
-                    }
-
-                    if found_var == false {
-                        let position = in_pair.line_col();
-                        let line = position.0;
-                        let column = position.1;
-                        let context = get_error_context(raw_rcss, line, 2);
-
-                        let err = RCSSError::VariableError {
-                            file_path: input_path.into(),
-                            line: line,
-                            column: column,
-                            variable_name: variable_reference.trim_start_matches("&").to_string(),
-                            message: format!(
-                                "Could not find variable: {}",
-                                variable_reference.trim_start_matches("&")
-                            ),
-                            context: context,
-                        };
-
-                        display_error(&err);
-
-                        return Err(err);
-                    }
+                if let Some(values) = declarations.get_mut(key) {
+                    values.push(decl_str.clone());
                 } else {
-                    if let Some(values) = declarations.get_mut(key) {
-                        values.push(default_value.clone());
-                    } else {
-                        declarations.insert(key.to_string(), vec![default_value.clone()]);
-                    }
+                    declarations.insert(key.to_string(), vec![decl_str.clone()]);
                 }
             }
 
@@ -173,9 +142,7 @@ pub fn process_rule_normal(
                 }
             }
 
-            _ => {
-                print_rule(in_pair);
-            }
+            _ => {}
         }
     }
 

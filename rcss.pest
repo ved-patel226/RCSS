@@ -129,7 +129,18 @@ function_call = {
 arithmetic_operator = { "+" | "-" | "*" | "/" }
 
 
-del_value = _{ ((function_call | del_val_keyword | del_val_color | del_val_length | variable_reference | string_literal) ~ WHITE_SPACE*)+ }
+del_value = _{ 
+    // (
+    //     (function_call | del_val_keyword | del_val_color | del_val_length | variable_reference | string_literal)
+    //     ~ WHITE_SPACE*
+    //     ~ ("," ~ WHITE_SPACE*
+    //         ~ (function_call | del_val_keyword | del_val_color | del_val_length | variable_reference | string_literal)
+    //         ~ WHITE_SPACE*
+    //     )*
+    // )
+
+    (!end_seperater ~ ANY)* ~ WHITE_SPACE*
+}
 
 declaration         = { WHITE_SPACE* ~ del_property ~ property_separater ~ WHITE_SPACE* ~ del_value ~ end_seperater ~ WHITE_SPACE* }
 

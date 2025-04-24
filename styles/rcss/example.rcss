@@ -1,67 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
 
 
+
+html {
+  color-scheme: dark;
+}
+
 body {
-    background-color:rgb(60, 60, 60);
-    height: 200vh;
-    position: relative;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
+    display: grid;
+    height: 400vh;
+
+    place-items: center;
 
     font-family: "Inter";
     font-optical-sizing: auto;
-    font-weight: 300;
     font-style: normal;
 }
 
-.grain {
-	position: fixed;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	pointer-event: none;
-	z-index: 300;
-	transform: translateZ(0);
-    z-index: 0;
+let background_size: "2.75rem";
+let background_line: "color-mix(in oklch, canvasText, transparent 70%)";
 
-	&:before {
-        content: "";
-        top: -10rem;
-        left: -10rem;
-        width: calc(100% + 20rem);
-        height: calc(100% + 20rem);
-        z-index: 9999;
-        position: fixed;
-        background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png");
-        opacity: 0.15;
-        pointer-events: none;
-        -webkit-animation: noise 1s steps(2) infinite;
-        animation: noise 1s steps(2) infinite;
-	}
+.background {
+    content: '';
+    width: 100vw;
+    height: 200vh;
+    background: linear-gradient(
+        90deg,
+        &background_line 0.0625rem,
+        transparent 0.0625rem &background_size
+        )
+        50% 50% / &background_size &background_size,
+        linear-gradient(&background_line 0.0625rem, transparent 0.0625rem &background_size) 50% 50% / &background_size &background_size;
+    
+    /* Fade all sides using a radial-gradient mask */
+    mask-image: radial-gradient(circle at 50% 50%, #fff 10%, transparent 100%);
+    top: 0;
+    left: 0;
+    transform-style: flat;
+    pointer-events: none;
+    position: absolute;
+    z-index: -1;
+    filter: drop-shadow(0 0 16px #fff);
 }
 
-.main {
-    z-index: 1;
+
+h1.ttl {
+    color: #DADADA;
+    font-weight: 700;
+    margin: 0;
 }
 
-@-webkit-keyframes noise {
-	to { 
-		transform: translate3d(-7rem,0,0);
-	}
-}
-
-@keyframes noise {
-	0% { transform: translate3d(0,9rem,0); }
-	10% { transform: translate3d(-1rem,-4rem,0); }
-	20% { transform: translate3d(-8rem,2rem,0); }
-	30% { transform: translate3d(9rem,-9rem,0); }
-	40% { transform: translate3d(-2rem,7rem,0); }
-	50% { transform: translate3d(-9rem,-4rem,0); }
-	60% { transform: translate3d(2rem,6rem,0); }
-	70% { transform: translate3d(7rem,-8rem,0); }
-	80% { transform: translate3d(-9rem,1rem,0); }
-	90% { transform: translate3d(6rem,-5rem,0); }
-	to { transform: translate3d(-7rem,0,0); }
+hr.spacer {
+    border: none;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
