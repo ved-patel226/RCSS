@@ -1,48 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
-
-.background {
-    background: linear-gradient(
-        90deg,
-        color-mix(in oklch, canvasText, transparent 70%) 0.0625rem,
-        transparent 0.0625rem 2.75rem
-        )
-        50% 50% / 2.75rem 2.75rem,
-        linear-gradient(color-mix(in oklch, canvasText, transparent 70%) 0.0625rem, transparent 0.0625rem 2.75rem) 50% 50% / 2.75rem 2.75rem;
-    content: '';
-    filter: drop-shadow(0 0 16px #fff);
-    height: 200vh;
-    left: 0;
-    mask-image: radial-gradient(circle at 50% 50%, #fff 10%, transparent 100%);
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    transform-style: flat;
-    width: 100vw;
-    z-index: -1;
+h1 {
+    color: red;
 }
 
-body {
-    display: grid;
-    font-family: "Inter";
-    font-optical-sizing: auto;
-    font-style: normal;
-    height: 400vh;
-    place-items: center;
-}
-
-h1.ttl {
-    color: #DADADA;
-    font-weight: 700;
-    margin: 0;
-}
-
-hr.spacer {
-    border: none;
-    margin-bottom: 24px;
-    margin-top: 24px;
-}
-
-html {
-    color-scheme: dark;
+h1 h2 {
+    color: blue;
 }
 

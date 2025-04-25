@@ -1,6 +1,0 @@
-let primary_color: "red";
-let secondary_color: "blue";
-
-fn padding() {
-  padding: 10px;
-}

@@ -14,6 +14,7 @@ use crate::{ rule_normal, variables, functions, keyframes, imports, media_querie
 #[grammar = "rcss.pest"]
 pub struct RCSSParser;
 
+#[allow(dead_code)]
 pub fn print_rule(pair: pest::iterators::Pair<Rule>) {
     println!("{:?} -> {}", pair.as_rule(), pair.as_str());
 }

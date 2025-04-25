@@ -46,13 +46,7 @@ pub fn process_rule_normal(
 
                 let mut referenced_vars = Vec::new();
 
-                let mut decl_property = "";
-                let mut decl_value: String = "".to_string();
-
-                if let Some((property, value)) = decl_str.split_once(':') {
-                    decl_property = property.trim();
-                    decl_value = value.trim().to_string();
-
+                if let Some((_property, value)) = decl_str.split_once(':') {
                     for token in value.split_whitespace() {
                         if token.starts_with("&") {
                             let var = token
