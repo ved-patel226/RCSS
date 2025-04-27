@@ -1,9 +1,79 @@
-h1 {
-    color: red;
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
 
 
-    &:h2 {
-        color: blue;
-    } 
+
+html {
+  color-scheme: dark;
+}
+
+body {
+    height: 400vh;
+
+    place-items: center;
+
+    font-family: "Inter";
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+let background_size: "2.75rem";
+let background_line: "color-mix(in oklch, canvasText, transparent 70%)";
+
+.background {
+    content: '';
+    width: 100vw;
+    height: 200vh;
+    background: linear-gradient(
+        90deg,
+        &background_line 0.0625rem,
+        transparent 0.0625rem &background_size
+        )
+        50% 50% / &background_size &background_size,
+        linear-gradient(&background_line 0.0625rem, transparent 0.0625rem &background_size) 50% 50% / &background_size &background_size;
     
+    /* Fade all sides using a radial-gradient mask */
+    mask-image: radial-gradient(circle at 50% 50%, #fff 10%, transparent 100%);
+    top: 0;
+    left: 0;
+    transform-style: flat;
+    pointer-events: none;
+    position: fixed;
+    z-index: -1;
+    filter: drop-shadow(0 0 16px #fff);
+}
+
+.ttl-wrapper {
+    display: flex;
+    align-items: flex-end;
+
+
+    .ttl {
+        display: flex;
+        align-items: flex-end;
+        font-size: 48px;
+        color: #DADADA;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .highlight {
+        line-height: 1;
+        align-self: flex-end;
+
+        animation: 3s ease highlight-anim forwards;
+    }
+}
+
+@keyframes highlight-anim {
+    to {
+        color: #d67d74;
+        font-size: 82px;
+    }
+}
+
+
+hr.spacer {
+    border: none;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
