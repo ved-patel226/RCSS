@@ -21,19 +21,45 @@ pub fn process_rule_normal(
         match in_pair.as_rule() {
             Rule::selector => {
                 // if not the pseduo thing
-                let selector = if
-                    !in_pair.as_str().trim().starts_with("&::") &&
-                    !in_pair.as_str().trim().starts_with("&:")
-                {
-                    in_pair.as_str().trim().to_string()
-                } else {
-                    in_pair.as_str().trim().trim_start_matches('&').trim().to_string()
-                };
+                let selector_str = in_pair.as_str().trim();
 
-                current_selector.push(selector);
+                if selector_str.starts_with("&::") || selector_str.starts_with("&:") {
+                    // Handle parent selector reference with pseudo-elements/classes
+                    if let Some(last) = current_selector.last_mut() {
+                        // Append the pseudo-element/class to the parent selector
+                        *last = format!("{}{}", last, selector_str.trim_start_matches('&'));
+                    } else {
+                        // This shouldn't happen with valid RCSS, but handle it gracefully
+                        current_selector.push(selector_str.trim_start_matches('&').to_string());
+                    }
+                } else {
+                    // Regular selector (no parent reference)
+                    current_selector.push(selector_str.to_string());
+                }
+
+                println!("{:?}", current_selector);
             }
 
             Rule::right_curly_brace => {
+                if let Some(last) = current_selector.last_mut() {
+                    // Split by either ':' or '::', whichever comes first
+                    let mut split_idx = None;
+
+                    if let Some(idx) = last.find("::") {
+                        split_idx = Some(idx);
+                    } else if let Some(idx) = last.find(':') {
+                        // Ensure it's the first ':' from the left, not part of '::'
+                        if last.get(idx..idx + 2) != Some("::") {
+                            split_idx = Some(idx);
+                        }
+                    }
+
+                    if let Some(idx) = split_idx {
+                        *last = last[..idx].to_string();
+                        continue;
+                    }
+                }
+
                 if !current_selector.is_empty() {
                     current_selector.pop();
                 }
