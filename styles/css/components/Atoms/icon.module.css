@@ -1,0 +1,10 @@
+.icon {
+    font-size: 32px;
+    transition: all 0.4s ease;
+}
+
+.icon:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 2px 8px rgba(214, 125, 116, 0.3));
+}
+

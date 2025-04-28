@@ -75,7 +75,9 @@ pub fn process_rule_normal(
                         if token.starts_with("&") {
                             let var = token
                                 .trim_start_matches('&')
-                                .trim_end_matches(|c| (c == ';' || c == ','));
+                                .trim_end_matches(|c| (c == ';' || c == ',' || c == ')'));
+
+                            println!("{}", var);
                             referenced_vars.push(var);
                         }
                     }

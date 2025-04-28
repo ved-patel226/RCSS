@@ -1,0 +1,11 @@
+use common;
+
+.icon {
+    font-size: 32px;
+    transition: all 0.4s ease;
+
+    &:hover {
+        filter: drop-shadow(0 2px 8px &var);
+        cursor: pointer;
+    }
+}
