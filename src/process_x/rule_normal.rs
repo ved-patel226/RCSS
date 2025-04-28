@@ -36,8 +36,6 @@ pub fn process_rule_normal(
                     // Regular selector (no parent reference)
                     current_selector.push(selector_str.to_string());
                 }
-
-                println!("{:?}", current_selector);
             }
 
             Rule::right_curly_brace => {
