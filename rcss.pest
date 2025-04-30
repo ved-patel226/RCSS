@@ -128,10 +128,11 @@ function_call = {
 // Add this new rule for arithmetic operators in calc() functions
 arithmetic_operator = { "+" | "-" | "*" | "/" }
 
+important = {"!important"}
 
 del_value = _{ 
     (
-        (function_call | del_val_keyword | del_val_color | del_val_length | variable_reference | string_literal | css_operator) ~ 
+        (function_call | del_val_keyword | del_val_color | del_val_length | variable_reference | string_literal | css_operator | important) ~ 
         WHITE_SPACE*
     )+ ~ 
     (
